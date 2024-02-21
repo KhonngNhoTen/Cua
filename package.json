@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf ./dist && tsc",
+    "build": "rm -rf ./build && tsc",
     "watch": "tsc -w && npm run build",
     "watch:win": "tsc -w && npm run build:win",
-    "build:win": "rmdir /s /q  .\\dist && tsc"
+    "build:win": "rmdir /s /q  .\\build && tsc"
   },
   "repository": {
     "type": "git",

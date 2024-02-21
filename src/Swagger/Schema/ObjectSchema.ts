@@ -1,6 +1,6 @@
 import Schema from "./Schema";
 
-class ObjectSchema extends Schema {
+export class ObjectSchema extends Schema {
     protected properties: {[fieldName: string]: Schema} = {};
 
     genSwagger(): Object {

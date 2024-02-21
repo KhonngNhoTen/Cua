@@ -1,5 +1,5 @@
 import RouteNormalization from "../RouteNormalization/RouteNormalization";
-import SwaggerConfig from "../Swagger/Core/SwaggerConfig";
+import SwaggerConfig from "../Swagger/Core/SwaggerBuilder";
 import RouteLoader from "./RouteLoader";
 
 export type RouteSchema = {

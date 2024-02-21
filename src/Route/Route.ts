@@ -1,15 +1,15 @@
 import { RouteSchema } from "./type";
 
 class Route {
-  protected code: string = "";
-  protected url: string = "";
-  protected method: string = "";
-  protected middlewares: Promise<void>[] = [];
-  protected handler?: Promise<void>;
-  protected request: Object = {}
-  protected response: Object = {}
-  protected isNull: boolean = false;
-  protected childs: Route[] = [];
+  code: string = "";
+  url: string = "";
+  method: string = "";
+  middlewares: Promise<void>[] = [];
+  handler?: Promise<void>;
+  request: Object = {}
+  response: Object = {}
+  isNull: boolean = false;
+  childs: Route[] = [];
 
 
   constructor(schema: RouteSchema) {
