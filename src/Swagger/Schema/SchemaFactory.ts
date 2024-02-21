@@ -1,25 +1,27 @@
 import { TYPES, getType } from "../../Helpers/check-type";
-import { AttributeSchemaOptions, SchemaOptions } from "../type";
+import { RouteRequest } from "../../Route/type";
 import ArraySchema from "./ArraySchema";
-import { ObjectSchema } from "./ObjectSchema";
+import ObjectSchema from "./ObjectSchema";
 import PrimitiveSchema from "./PrimitiveSchema";
+import Schema from "./Schema";
 
-class SchemaFactory {
-    create(schema: SchemaOptions) {
+export class SchemaFactory {
+  public static create(request: RouteRequest, key?: string): Schema {
+    const type = getType(request);
 
-    }
+    if (type === TYPES.OBJECT) {
+      const keys = Object.keys(request);
+      const properties: Record<string, Schema> = {};
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        properties[key] = this.create(request[key], key);
+      }
+      return new ObjectSchema(properties, type, key);
+    } else if (type === TYPES.ARRAY) {
+      const schema = this.create(request[0], key);
+      return new ArraySchema(schema, type, key);
+    } else if (type === TYPES.NUMBER || type === TYPES.STRING) return new PrimitiveSchema(request, type, key);
 
-
-    private convert(key: string, value: AttributeSchemaOptions) {
-        const type = getType(value);
-        if (type === TYPES.STRING)
-            return new PrimitiveSchema(key,value);
-
-        if (type === TYPES.NUMBER) return new PrimitiveSchema(value);
-        if (type === TYPES.ARRAY) return new ArraySchema(value);
-        if (type === TYPES.OBJECT) return new ObjectSchema(value);
-        if (type === TYPES.ANY)
-            throw new Error("Type of value not support");
-
-    }
+    throw new Error("Type not support");
+  }
 }

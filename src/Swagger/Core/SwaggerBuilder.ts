@@ -1,54 +1,53 @@
-import { ExternalDocs, SwaggerSchema, Tags,Path } from "../type";
+import { ExternalDocs, SwaggerExportSchema, Tags, Path } from "../type";
 
 class SwaggerBuilder {
-    private schema: SwaggerSchema = {info: {}, servers: [], externalDocs: {}, tags: [], paths: {}};
-    get Schema() {return this.schema }
+  private options: SwaggerExportSchema = { info: {}, servers: [], externalDocs: {}, tags: [], paths: {} };
+  get Options() {
+    return this.options;
+  }
 
+  private static instance: SwaggerBuilder;
+  static Instance() {
+    if (!SwaggerBuilder.instance) SwaggerBuilder.instance = new SwaggerBuilder();
+    return SwaggerBuilder.instance;
+  }
 
-    static instance: SwaggerBuilder;
-    static initInstance () {
-        SwaggerBuilder.instance = new SwaggerBuilder();
-    }
+  constructor() {
+    this.options.openapi = "3.0.3";
+  }
 
-    constructor() {
-        this.schema.openapi = "3.0.3";
-    }
+  public addApiInfo(title: string, description: string, version: string) {
+    if (!this.options.info) this.options.info = {};
 
-    addApiInfo(title: string, description: string, version: string) {
-        if (!this.schema.info)
-            this.schema.info = {}
+    this.options.info.description = description;
+    this.options.info.title = title;
+    this.options.info.version = version;
+  }
 
-        this.schema.info.description = description;
-        this.schema.info.title = title;
-        this.schema.info.version = version;
+  public addServers(urls: string[]) {
+    this.options.servers = urls.map((e) => {
+      url: e;
+    }) as Array<any>;
+  }
 
-    }
+  public addTag(tags: []) {
+    this.options.tags = tags;
+  }
 
-    addServers(urls: string[]) {
-        this.schema.servers = urls.map(e => {url: e}) as Array<any>;
-    }
+  public addExternalDocs(externalDocs: ExternalDocs) {
+    this.options.externalDocs = externalDocs;
+  }
 
-    addTag(tags: []) {
-        this.schema.tags = tags;
-    }
+  insertPath(path: string): { [httpMethod: string]: Path } {
+    this.options.paths[path] = {};
 
-    addExternalDocs (externalDocs: ExternalDocs) {
-        this.schema.externalDocs = externalDocs; 
-    }
+    return this.options.paths[path];
+  }
 
-    insertPath(path: string): { [httpMethod: string]: Path; } {
-        this.schema.paths[path] = {
-
-        };
-
-        return this.schema.paths[path];
-    }
-
-    insertApi(url: string, method: string, data: Path) {
-        const path = this.insertPath(url);
-        path[method] = data;
-    }
-
+  public insertApi(url: string, method: string, data: Path) {
+    const path = this.insertPath(url);
+    path[method] = data;
+  }
 }
 
 export default SwaggerBuilder;

@@ -1,15 +1,19 @@
+import { TYPES } from "../../Helpers/check-type";
+import { SwaggerSchema } from "../type";
 import Schema from "./Schema";
 
 class PrimitiveSchema extends Schema {
-   private name: string = ""; 
+  private value: any;
 
-    genSwagger(): Object {
-        return {
-            type: this.type
-        }
-    }
-
-
-  
+  constructor(value: any, type: TYPES, name?: string) {
+    super(type, name);
+    this.value = value;
+  }
+  genSwagger(): SwaggerSchema {
+    return {
+      type: this.type === TYPES.STRING ? "string" : "number",
+      example: this.value,
+    };
+  }
 }
 export default PrimitiveSchema;

@@ -1,12 +1,17 @@
+import { TYPES } from "../../Helpers/check-type";
 import ISwaggerComponent from "../Components/SwaggerComponent";
+import { SwaggerSchema } from "../type";
+
 abstract class Schema implements ISwaggerComponent {
-    
-    protected type: string = "";
-    protected nullable: boolean = false;
-    protected description: string  = "";
-    protected name: string = "";
-    abstract genSwagger(): Object;
+  protected type: TYPES;
+  protected name: string | undefined;
+
+  abstract genSwagger(): SwaggerSchema;
+
+  constructor(type: TYPES, name?: string) {
+    this.name = name;
+    this.type = type;
+  }
 }
 
-
-export default Schema
+export default Schema;
