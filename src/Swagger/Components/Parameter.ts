@@ -1,6 +1,4 @@
-import { RouteParameter } from "../../Route/type";
 import { BaseSchema } from "../SwaggerSchema/BaseSchema";
-import { SchemaFactory } from "../SwaggerSchema/SwaggerSchemaFactory";
 import { SwaggerParameter } from "../type";
 import ISwaggerComponent from "./SwaggerComponent";
 

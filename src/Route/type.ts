@@ -9,7 +9,7 @@ export type RouteSchema = {
   middlewares: Promise<void>[];
   handler?: Promise<void>;
   request: Object;
-  response: Object;
+  response: Record<string, RouteRequest>;
   queries?: RouteRequest;
   params?: RouteRequest;
   childs: RouteSchema[];
@@ -29,5 +29,3 @@ export type RouteParameterAttributes = {
   required?: boolean;
   example?: any;
 };
-export type RouteParameter = Record<string, RouteParameterAttributes>;
-// | Record<string, Record<string, RouteParameterAttributes>>;

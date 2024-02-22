@@ -1,5 +1,5 @@
 import { BaseSchema } from "../SwaggerSchema/BaseSchema";
-import { ContentType, ContentTypeString } from "./ContentType";
+import { ContentType } from "./ContentType";
 import ISwaggerComponent from "./SwaggerComponent";
 
 class RequestBody implements ISwaggerComponent {
@@ -13,7 +13,7 @@ class RequestBody implements ISwaggerComponent {
   genSwagger(): Object {
     return {
       content: {
-        [ContentTypeString[this.contentType]]: {
+        [this.contentType]: {
           schema: this.schema.genSwagger(),
         },
       },

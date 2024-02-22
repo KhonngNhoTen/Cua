@@ -1,3 +1,5 @@
+import { ContentType } from "./Components/ContentType";
+
 export type SwaggerExportSchema = {
   openapi?: string;
   info: ApiInfo;
@@ -51,4 +53,19 @@ export type SwaggerSchema = {
   example?: any;
   properties?: Record<string, SwaggerSchema> | Record<string, Record<string, SwaggerSchema>>;
   items?: SwaggerSchema;
+};
+
+// type valueof<T> = T[keyof T];
+
+export type SwaggerResponse = {
+  [httpStatus: string]: {
+    description?: string;
+    content?: Record<
+      string,
+      {
+        schema: SwaggerSchema;
+        examples: Object;
+      }
+    >;
+  };
 };

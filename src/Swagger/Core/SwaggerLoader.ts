@@ -1,11 +1,10 @@
 import Route from "../../Route/Route";
-import { RouteParameter } from "../../Route/type";
 import Parameter from "../Components/Parameter";
 import RequestBody from "../Components/RequestBody";
 import Response from "../Components/Response";
 import { BaseSchema } from "../SwaggerSchema/BaseSchema";
 import { Schema } from "../SwaggerSchema/Schema";
-import { SwaggerExportSchema, Path, SwaggerParameter } from "../type";
+import { SwaggerExportSchema, Path, SwaggerParameter, SwaggerResponse } from "../type";
 import SwaggerBuilder from "./SwaggerBuilder";
 
 class SwaggerLoader {
@@ -26,7 +25,7 @@ class SwaggerLoader {
         tags: [],
         operationId: route.code,
         requestBody: this.createRequestBody(route),
-        responses: new Response().genSwagger(),
+        responses: this.createResponse(route),
         parameters: this.createParameters(route),
       };
 
@@ -61,6 +60,22 @@ class SwaggerLoader {
       }
     }
     return parameters;
+  }
+
+  createResponse(route: Route): SwaggerResponse {
+    let resOpts: SwaggerResponse = {};
+    if (Response.isWrapperRepsonse(route.response)) {
+      const status = Object.keys(route.response);
+      for (let i = 0; i < status.length; i++) {
+        const response = route.response[status[i]];
+        const schema = response instanceof BaseSchema ? response : new Schema(response);
+        resOpts[status[i]] = new Response(schema, status[i]).genSwagger();
+      }
+    } else {
+      const schema = route.response instanceof BaseSchema ? route.response : new Schema(route.response);
+      resOpts = new Response(schema).genSwagger();
+    }
+    return resOpts;
   }
 }
 

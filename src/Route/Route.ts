@@ -1,4 +1,4 @@
-import { RouteParameter, RouteRequest, RouteSchema } from "./type";
+import { RouteRequest, RouteSchema } from "./type";
 
 class Route {
   code: string = "";
@@ -9,7 +9,7 @@ class Route {
   middlewares: Promise<void>[] = [];
   handler?: Promise<void>;
   request: Object = {};
-  response: Object = {};
+  response: Record<string, RouteRequest> = {};
   isNull: boolean = false;
   params?: RouteRequest;
   queries?: RouteRequest;
