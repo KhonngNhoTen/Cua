@@ -10,8 +10,8 @@ export type RouteSchema = {
   handler?: Promise<void>;
   request: Object;
   response: Object;
-  queries?: Record<string, RouteParameter>;
-  params?: Record<string, RouteParameter>;
+  queries?: RouteRequest;
+  params?: RouteRequest;
   childs: RouteSchema[];
 };
 

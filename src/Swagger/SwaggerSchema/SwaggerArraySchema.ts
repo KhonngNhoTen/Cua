@@ -1,8 +1,8 @@
 import { TYPES } from "../../Helpers/check-type";
 import { SwaggerSchema } from "../type";
-import Schema from "./Schema";
+import Schema from "./SwaggerSchema";
 
-class ArraySchema extends Schema {
+class SwaggerArraySchema extends Schema {
   protected items: Schema;
   constructor(items: Schema, type: TYPES, name?: string) {
     super(type, name);
@@ -16,4 +16,4 @@ class ArraySchema extends Schema {
   }
 }
 
-export default ArraySchema;
+export default SwaggerArraySchema;

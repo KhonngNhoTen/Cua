@@ -46,7 +46,7 @@ export type Path = {
 };
 
 export type SwaggerSchema = {
-  type: string;
+  type?: string;
   format?: string;
   example?: any;
   properties?: Record<string, SwaggerSchema> | Record<string, Record<string, SwaggerSchema>>;

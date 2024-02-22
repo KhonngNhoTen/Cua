@@ -1,4 +1,4 @@
-import { RouteParameter, RouteSchema } from "./type";
+import { RouteParameter, RouteRequest, RouteSchema } from "./type";
 
 class Route {
   code: string = "";
@@ -11,8 +11,8 @@ class Route {
   request: Object = {};
   response: Object = {};
   isNull: boolean = false;
-  params?: RouteParameter;
-  queries?: RouteParameter;
+  params?: RouteRequest;
+  queries?: RouteRequest;
   childs: Route[] = [];
 
   constructor(schema: RouteSchema) {

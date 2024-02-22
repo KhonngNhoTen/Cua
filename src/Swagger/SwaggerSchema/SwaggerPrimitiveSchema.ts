@@ -1,6 +1,6 @@
 import { TYPES } from "../../Helpers/check-type";
 import { SwaggerSchema } from "../type";
-import Schema from "./Schema";
+import Schema from "./SwaggerSchema";
 
 class PrimitiveSchema extends Schema {
   private value: any;
