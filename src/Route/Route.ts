@@ -6,6 +6,7 @@ class Route {
   method: string = "";
   description: string = "";
   summary: string = "";
+  tags: string[] = [];
   middlewares: Promise<void>[] = [];
   handler?: Promise<void>;
   request: Object = {};
@@ -13,22 +14,25 @@ class Route {
   isNull: boolean = false;
   parameters: RouteParameter;
   childs: Route[] = [];
+  security: any;
 
   constructor(schema: RouteSchema) {
     this.code = schema.code;
-    this.middlewares = schema.middlewares;
+    this.middlewares = schema.middlewares ?? [];
     this.handler = schema.handler;
-    this.request = schema.request;
-    this.response = schema.response;
-    this.parameters = schema.parameters;
+    this.request = schema.request ?? {};
+    this.response = schema.response ?? {};
+    this.parameters = schema.parameters ?? {};
 
-    const [method, url] = schema.url.split(" ");
+    if (schema.url) {
+      const [method, url] = schema.url.split(" ");
 
-    if (!method || !url) throw new Error("Url's format is : '<METHOD> <PATH>'");
-    this.url = url;
-    this.method = method;
+      if (!method || !url) throw new Error("Url's format is : '<METHOD> <PATH>'");
+      this.url = url;
+      this.method = method.toLocaleLowerCase();
+    }
 
-    this.childs = this.createChilds(schema.childs);
+    this.childs = schema.childs ? this.createChilds(schema.childs) : [];
   }
 
   registry(req: any) {

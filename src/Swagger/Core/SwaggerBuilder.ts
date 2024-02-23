@@ -1,6 +1,6 @@
 import { ExternalDocs, SwaggerExportSchema, Tags, Path } from "../type";
 
-class SwaggerBuilder {
+export class SwaggerBuilder {
   private options: SwaggerExportSchema = { info: {}, servers: [], externalDocs: {}, tags: [], paths: {} };
   get Options() {
     return this.options;
@@ -22,24 +22,28 @@ class SwaggerBuilder {
     this.options.info.description = description;
     this.options.info.title = title;
     this.options.info.version = version;
+    return this;
   }
 
   public addServers(urls: string[]) {
-    this.options.servers = urls.map((e) => {
-      url: e;
-    }) as Array<any>;
+    this.options.servers = urls.map((e) => ({
+      url: e,
+    })) as Array<any>;
+    return this;
   }
 
   public addTag(tags: []) {
     this.options.tags = tags;
+    return this;
   }
 
   public addExternalDocs(externalDocs: ExternalDocs) {
     this.options.externalDocs = externalDocs;
+    return this;
   }
 
   insertPath(path: string): { [httpMethod: string]: Path } {
-    this.options.paths[path] = {};
+    if (!this.options.paths[path]) this.options.paths[path] = {};
 
     return this.options.paths[path];
   }
@@ -49,5 +53,3 @@ class SwaggerBuilder {
     path[method] = data;
   }
 }
-
-export default SwaggerBuilder;

@@ -1,0 +1,16 @@
+{
+    "info": {
+        "description": "This's descriptions",
+        "title": "This's Title",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "youtube.com"
+        }
+    ],
+    "externalDocs": {},
+    "tags": [],
+    "paths": {},
+    "openapi": "3.0.3"
+}
