@@ -1,10 +1,17 @@
 import Route from "../../Route/Route";
-import Parameter from "../Components/Parameter";
-import RequestBody from "../Components/RequestBody";
-import Response from "../Components/Response";
-import { BaseSchema } from "../SwaggerSchema/BaseSchema";
-import { Schema } from "../SwaggerSchema/Schema";
-import { SwaggerExportSchema, Path, SwaggerParameter, SwaggerResponse } from "../type";
+import { LocationParameter } from "../../Route/type";
+import { DataTransform } from "../Component/DataTransform/DataTransform";
+import { MediaData } from "../Component/MediaData/MediaData";
+import { Parameter } from "../Component/Parameter/Parameter";
+
+import {
+  SwaggerExportSchema,
+  Path,
+  SwaggerParameter,
+  SwaggerResponse,
+  SwaggerDataTransform,
+  SwaggerResponses,
+} from "../type";
 import SwaggerBuilder from "./SwaggerBuilder";
 
 class SwaggerLoader {
@@ -35,47 +42,47 @@ class SwaggerLoader {
     return options.Options;
   }
 
-  createRequestBody(route: Route): RequestBody {
-    if (route.request instanceof BaseSchema) return new RequestBody(route.request);
-    return new RequestBody(new Schema(route.request));
+  createRequestBody(route: Route): SwaggerDataTransform {
+    if (route.request instanceof MediaData) return new DataTransform(route.request).genSwagger();
+    return new DataTransform(new MediaData().fromRoute(route.request)).genSwagger();
   }
 
   createParameters(route: Route): SwaggerParameter[] {
+    const locations = ["path", "cookie", "query", "header"];
     const parameters: SwaggerParameter[] = [];
-    if (route.queries) {
-      const keys = Object.keys(route.queries);
-      for (let i = 0; i < keys.length; i++) {
-        const query = route.queries[keys[i]];
-        const schema = query instanceof Schema ? query : new Schema(query);
-        parameters.push(new Parameter(schema, "query").genSwagger());
+    for (let i = 0; i < locations.length; i++) {
+      const location = locations[i] as LocationParameter;
+      const keys = Object.keys(route.parameters[location]);
+      for (let j = 0; j < keys.length; j++) {
+        const params = route.parameters[location][keys[j]];
+        parameters.push(new Parameter().fromRoute(params, location, keys[i]).genSwagger());
       }
     }
 
-    if (route.params) {
-      const keys = Object.keys(route.params);
-      for (let i = 0; i < keys.length; i++) {
-        const param = route.params[keys[i]];
-        const schema = param instanceof Schema ? param : new Schema(param);
-        parameters.push(new Parameter(schema, "path").genSwagger());
-      }
-    }
     return parameters;
   }
 
-  createResponse(route: Route): SwaggerResponse {
-    let resOpts: SwaggerResponse = {};
-    if (Response.isWrapperRepsonse(route.response)) {
+  createResponse(route: Route): SwaggerResponses {
+    let resOpts: SwaggerResponses = {};
+    if (SwaggerLoader.isWrapperRepsonse(route.response)) {
       const status = Object.keys(route.response);
       for (let i = 0; i < status.length; i++) {
         const response = route.response[status[i]];
-        const schema = response instanceof BaseSchema ? response : new Schema(response);
-        resOpts[status[i]] = new Response(schema, status[i]).genSwagger();
+        const media = response instanceof MediaData ? new MediaData(response) : response;
+        const dataTransform = new DataTransform(media as MediaData);
+        resOpts[status[i]] = dataTransform.genSwagger();
       }
     } else {
-      const schema = route.response instanceof BaseSchema ? route.response : new Schema(route.response);
-      resOpts = new Response(schema).genSwagger();
+      const media = route.response instanceof MediaData ? new MediaData(route.response) : route.response;
+      const dataTransform = new DataTransform(media as MediaData);
+      resOpts.default = dataTransform.genSwagger();
     }
     return resOpts;
+  }
+
+  static isWrapperRepsonse(response: Object) {
+    const key = Object.keys(response).reduce((init, val) => (init += val), "");
+    return /^[0-9]+$/.test(key);
   }
 }
 

@@ -1,5 +1,3 @@
-import { ContentType } from "./Components/ContentType";
-
 export type SwaggerExportSchema = {
   openapi?: string;
   info: ApiInfo;
@@ -29,11 +27,12 @@ export type ExternalDocs = {
 };
 
 export type SwaggerParameter = {
-  in: "query" | "path";
-  name: string;
-  description: string;
-  required: boolean;
-  schema: SwaggerSchema;
+  in?: "query" | "header" | "path" | "cookie";
+  name?: string;
+  description?: string;
+  required?: boolean;
+  schema?: SwaggerSchema;
+  content?: SwaggerMediaData;
 };
 
 export type Path = {
@@ -53,6 +52,8 @@ export type SwaggerSchema = {
   example?: any;
   properties?: Record<string, SwaggerSchema> | Record<string, Record<string, SwaggerSchema>>;
   items?: SwaggerSchema;
+  description?: string;
+  enum?: string[];
 };
 
 // type valueof<T> = T[keyof T];
@@ -64,8 +65,27 @@ export type SwaggerResponse = {
       string,
       {
         schema: SwaggerSchema;
-        examples: Object;
+        examples?: Object;
       }
     >;
   };
+};
+
+export type SwaggerExample = {
+  summary?: string;
+  description?: string;
+  value: any;
+};
+export type SwaggerMediaDataItem = {
+  schema: SwaggerSchema;
+  examples?: Record<string, SwaggerExample>;
+};
+export type SwaggerMediaData = Record<string, SwaggerMediaDataItem>;
+export type SwaggerDataTransform = {
+  description: string;
+  content: SwaggerMediaData;
+};
+
+export type SwaggerResponses = {
+  [httpStatus: string]: SwaggerDataTransform;
 };

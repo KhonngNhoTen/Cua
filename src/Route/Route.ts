@@ -1,4 +1,4 @@
-import { RouteRequest, RouteSchema } from "./type";
+import { RouteDataTransform, RouteParameter, RouteSchema } from "./type";
 
 class Route {
   code: string = "";
@@ -9,10 +9,9 @@ class Route {
   middlewares: Promise<void>[] = [];
   handler?: Promise<void>;
   request: Object = {};
-  response: Record<string, RouteRequest> = {};
+  response: Record<string, RouteDataTransform> = {};
   isNull: boolean = false;
-  params?: RouteRequest;
-  queries?: RouteRequest;
+  parameters: RouteParameter;
   childs: Route[] = [];
 
   constructor(schema: RouteSchema) {
@@ -21,6 +20,7 @@ class Route {
     this.handler = schema.handler;
     this.request = schema.request;
     this.response = schema.response;
+    this.parameters = schema.parameters;
 
     const [method, url] = schema.url.split(" ");
 
