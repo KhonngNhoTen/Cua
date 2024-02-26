@@ -1,51 +1,58 @@
+import { glob } from "glob";
 import fs from "fs/promises";
+
+import { IRouteHandler } from "../../Route/IRouteHandler";
 import Route from "../../Route/Route";
-import { LocationParameter, RouteDataTransform } from "../../Route/type";
+import { LocationParameter } from "../../Route/type";
 import { DataTransform } from "../Component/DataTransform/DataTransform";
 import { MediaData } from "../Component/MediaData/MediaData";
 import { Parameter } from "../Component/Parameter/Parameter";
 
-import { SwaggerExportSchema, Path, SwaggerParameter, SwaggerDataTransform, SwaggerResponses } from "../type";
+import { Path, SwaggerParameter, SwaggerDataTransform, SwaggerResponses } from "../type";
 import { SwaggerBuilder } from "./SwaggerBuilder";
 
-export class SwaggerLoader {
-  private routes: Route[] = [];
+export class SwaggerLoader implements IRouteHandler {
+  async load(path: string) {
+    let routes: Route[] = [];
 
-  constructor(routes: Route[]) {
-    this.routes = routes;
+    /** Load all route by pattern file name. */
+    const files = glob.globSync(path.replace(/\\/g, "/"));
+    for (let i = 0; i < files.length; i++) {
+      const route = new Route(require(files[i]));
+      routes = [...routes, ...route.listRoutes()];
+    }
+    return routes;
   }
 
-  genSwagger(): SwaggerExportSchema {
+  async handler(routes: Route[]) {
     const options = SwaggerBuilder.Instance();
 
-    for (let i = 0; i < this.routes.length; i++) {
-      const route = this.routes[i];
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i];
       const path: Path = {
         description: route.description ?? "",
         summary: route.summary ?? "",
         tags: route.tags,
         operationId: route.code,
-        requestBody: this.createRequestBody(route),
+        requestBody: this.createRequestBody(route) ?? undefined,
         responses: this.createResponse(route),
-        parameters: this.createParameters(route),
-        security: route.security ?? {},
+        parameters: this.createParameters(route) ?? undefined,
+        security: route.security ?? undefined,
       };
 
       options.insertApi(route.url, route.method, path);
+      await fs.writeFile(SwaggerBuilder.Instance().pathFile, JSON.stringify(SwaggerBuilder.Instance().Options));
     }
-
-    return options.Options;
   }
 
-  createRequestBody(route: Route): SwaggerDataTransform {
-    console.log("request body");
+  createRequestBody(route: Route): SwaggerDataTransform | null {
+    if (!route.request) return null;
     if (route.request instanceof MediaData) return new DataTransform(route.request).genSwagger();
     return new DataTransform(new MediaData().fromRoute(route.request)).genSwagger();
   }
 
-  createParameters(route: Route): SwaggerParameter[] {
-    console.log("request parameters");
-
+  createParameters(route: Route): SwaggerParameter[] | null {
+    if (!route.parameters) return null;
     const locations = ["path", "cookie", "query", "header"];
     const parameters: SwaggerParameter[] = [];
     for (let i = 0; i < locations.length; i++) {
@@ -54,7 +61,7 @@ export class SwaggerLoader {
       const keys = Object.keys(locationObject);
       for (let j = 0; j < keys.length; j++) {
         const params = locationObject[keys[j]];
-        parameters.push(new Parameter().fromRoute(params, location, keys[i]).genSwagger());
+        parameters.push(new Parameter().fromRoute(params, location, keys[j]).genSwagger());
       }
     }
 
@@ -62,8 +69,6 @@ export class SwaggerLoader {
   }
 
   createResponse(route: Route): SwaggerResponses {
-    console.log("request response");
-
     let resOpts: SwaggerResponses = {};
     if (SwaggerLoader.isWrapperRepsonse(route.response)) {
       const status = Object.keys(route.response);
@@ -84,9 +89,5 @@ export class SwaggerLoader {
   static isWrapperRepsonse(response: Object) {
     const key = Object.keys(response).reduce((init, val) => (init += val), "");
     return /^[0-9]+$/.test(key);
-  }
-
-  async writeFile(path: string) {
-    await fs.writeFile(path, JSON.stringify(SwaggerBuilder.Instance().Options));
   }
 }

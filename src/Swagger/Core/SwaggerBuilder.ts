@@ -1,7 +1,7 @@
-import { ExternalDocs, SwaggerExportSchema, Tags, Path } from "../type";
-
+import { SwaggerExportSchema, Path, ExternalDocs } from "../type";
 export class SwaggerBuilder {
-  private options: SwaggerExportSchema = { info: {}, servers: [], externalDocs: {}, tags: [], paths: {} };
+  private options: SwaggerExportSchema = { servers: [], paths: {} };
+  pathFile: string = "";
   get Options() {
     return this.options;
   }
@@ -14,6 +14,11 @@ export class SwaggerBuilder {
 
   constructor() {
     this.options.openapi = "3.0.3";
+  }
+
+  addPathFile(path: string) {
+    this.pathFile = path;
+    return this;
   }
 
   public addApiInfo(title: string, description: string, version: string) {
@@ -42,13 +47,13 @@ export class SwaggerBuilder {
     return this;
   }
 
-  insertPath(path: string): { [httpMethod: string]: Path } {
+  private insertPath(path: string): { [httpMethod: string]: Path } {
     if (!this.options.paths[path]) this.options.paths[path] = {};
 
     return this.options.paths[path];
   }
 
-  public insertApi(url: string, method: string, data: Path) {
+  insertApi(url: string, method: string, data: Path) {
     const path = this.insertPath(url);
     path[method] = data;
   }

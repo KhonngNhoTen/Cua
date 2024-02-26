@@ -1,30 +1,13 @@
 import { RouteDataTransform } from "../../../Route/type";
-import { IRouteHandler } from "../../Core/IRouteHandler";
+import { IRouteGenerator } from "../../Core/IRouteGenerator";
 import { SwaggerSchema } from "../../type";
 import { BaseSchema, BaseSchemaOptions, TYPES } from "./BaseSchema";
 
 export type SchemaOptions = {} & BaseSchemaOptions;
 
-export class Schema extends BaseSchema implements IRouteHandler {
+export class Schema extends BaseSchema implements IRouteGenerator {
   constructor(options?: SchemaOptions) {
     super(options);
-  }
-
-  addNode(schema: BaseSchema, key?: string) {
-    if (this.type === TYPES.ARRAY) {
-      this.structures = {
-        type: "array",
-        items: schema.genSwagger(),
-      };
-
-      this.nodes[0] = schema;
-    } else if (this.type === TYPES.OBJECT) {
-      this.nodes[key ?? schema.name] = schema;
-      if (!this.structures) this.structures = { type: "object", properties: {} };
-      if (this.structures.properties) this.structures.properties[key ?? schema.name] = schema.genSwagger();
-    }
-
-    return this;
   }
 
   fromRoute(request: RouteDataTransform, key?: string): BaseSchema {

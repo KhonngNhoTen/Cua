@@ -1,11 +1,11 @@
 import { RouteDataTransform } from "../../../Route/type";
-import { IRouteHandler } from "../../Core/IRouteHandler";
+import { IRouteGenerator } from "../../Core/IRouteGenerator";
 import { Schema } from "../Schema/Schema";
 import { TYPES } from "../Schema/BaseSchema";
 import { BaseParameter, BaseParameterOptions } from "./BaseParameter";
 import { MediaData } from "../MediaData/MediaData";
 
-export class Parameter extends BaseParameter implements IRouteHandler {
+export class Parameter extends BaseParameter implements IRouteGenerator {
   fromRoute(data: RouteDataTransform, location: "query" | "header" | "path" | "cookie", key?: string): BaseParameter {
     const opts: BaseParameterOptions = {
       in: location,

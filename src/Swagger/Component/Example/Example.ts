@@ -1,4 +1,4 @@
-import { IRouteHandler } from "../../Core/IRouteHandler";
+import { IRouteGenerator } from "../../Core/IRouteGenerator";
 import { ISwaggerComponent } from "../../Core/ISwaggerComponent";
 import { SwaggerExample } from "../../type";
 
@@ -8,7 +8,7 @@ export type ExampleOption = {
   value?: any;
 };
 
-export class Example implements ISwaggerComponent, IRouteHandler {
+export class Example implements ISwaggerComponent, IRouteGenerator {
   protected summary: string;
   protected description: string;
   protected value: any;

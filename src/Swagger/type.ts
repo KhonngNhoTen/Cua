@@ -1,11 +1,11 @@
 export type SwaggerExportSchema = {
   openapi?: string;
-  info: ApiInfo;
+  info?: ApiInfo;
   servers: {
     url: string;
   }[];
-  externalDocs: ExternalDocs;
-  tags: Tags[];
+  externalDocs?: ExternalDocs;
+  tags?: Tags[];
   paths: { [path: string]: { [httpMethod: string]: Path } };
 };
 

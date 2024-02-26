@@ -1,12 +1,9 @@
 import Route from "./Route/Route";
-import RouteConfig from "./Route/RouteConfig";
-import MiddlewareData from "./RouteNormalization/MiddlewareData";
 import RouteNormalization from "./RouteNormalization/RouteNormalization";
-import SwaggerConfig from "./Swagger/Core/SwaggerBuilder";
-
+import { SwaggerBuilder } from "./Swagger/Core/SwaggerBuilder";
 
 export default {
-    Route: {Route, RouteConfig},
-    Swagger: {SwaggerConfig},
-    RouteNormalization : {RouteNormalization, MiddlewareData}
-}
+  Route: { Route },
+  Swagger: { SwaggerBuilder },
+  RouteNormalization: { RouteNormalization },
+};

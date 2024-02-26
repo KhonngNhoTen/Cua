@@ -1,4 +1,4 @@
-import { IRouteHandler } from "../../Core/IRouteHandler";
+import { IRouteGenerator } from "../../Core/IRouteGenerator";
 import { ISwaggerComponent } from "../../Core/ISwaggerComponent";
 import { SwaggerMediaDataItem } from "../../type";
 import { Example } from "../Example/Example";
@@ -13,7 +13,7 @@ export type MediaDataOptions = {
   contentType?: ContentType;
 };
 
-export class MediaData implements ISwaggerComponent, IRouteHandler {
+export class MediaData implements ISwaggerComponent, IRouteGenerator {
   schema: BaseSchema;
   examples: Record<string, Example>;
   description: string;

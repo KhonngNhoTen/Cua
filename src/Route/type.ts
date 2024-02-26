@@ -17,11 +17,13 @@ export type RouteSchema = {
   security?: any;
 };
 
+export type NormalizationRoute = (...param: any[]) => { req: any; res: any; next: any; extraData: any };
+
 export type RouteConfigSchema = {
   path: string;
   swaggerConfig: SwaggerBuilder;
   routeLoader?: RouteLoader;
-  routeNormalization?: RouteNormalization;
+  routeNormalization?: NormalizationRoute;
 };
 
 export type RouteDataTransform = Record<string, any> | Record<string, Record<string, any>>;

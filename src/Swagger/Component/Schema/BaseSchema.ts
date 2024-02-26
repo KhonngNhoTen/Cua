@@ -19,14 +19,14 @@ export enum TYPES {
   ARRAY,
 }
 export class BaseSchema implements ISwaggerComponent {
-  public type: TYPES;
+  public type?: TYPES;
   public nodes: Record<string, BaseSchema> = {};
   public structures: SwaggerSchema = {};
-  public nullable: boolean;
-  public example: any;
-  public description: string;
-  public format: string;
-  public enum: string[] = [];
+  public nullable?: boolean;
+  public example?: any;
+  public description?: string;
+  public format?: string;
+  public enum?: string[];
   public name: string;
 
   constructor(options?: BaseSchemaOptions) {
@@ -34,21 +34,43 @@ export class BaseSchema implements ISwaggerComponent {
     this.nullable = options?.nullable ?? false;
     this.description = options?.description ?? "";
     this.format = options?.format ?? "";
-    this.enum = options?.enum ?? [];
+    this.enum = options?.enum;
     this.example = options?.example;
     this.name = options?.name ?? "";
-  }
 
-  genSwagger(): SwaggerSchema {
     if (this.type === TYPES.NUMBER || this.type === TYPES.STRING)
-      return {
+      this.structures = {
         type: this.type === TYPES.STRING ? "string" : "number",
         example: this.example,
         description: this.description ?? "",
         enum: this.enum,
         format: this.format,
       };
+  }
+
+  genSwagger(): SwaggerSchema {
     return this.structures;
+  }
+
+  addNode(schema: BaseSchema, key?: string) {
+    if (this.type === TYPES.ARRAY) {
+      this.structures = {
+        type: "array",
+        items: schema.genSwagger(),
+      };
+
+      this.nodes[0] = schema;
+    } else if (this.type === TYPES.OBJECT) {
+      this.nodes[key ?? schema.name] = schema;
+      this.structures = {
+        type: "object",
+        properties: {
+          [key ?? schema.name]: schema.genSwagger(),
+        },
+      };
+    }
+
+    return this;
   }
 
   getType(value: any): TYPES {

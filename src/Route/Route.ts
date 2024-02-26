@@ -9,10 +9,10 @@ class Route {
   tags: string[] = [];
   middlewares: Promise<void>[] = [];
   handler?: Promise<void>;
-  request: Object = {};
+  request?: Object;
   response: Record<string, RouteDataTransform> = {};
   isNull: boolean = false;
-  parameters: RouteParameter;
+  parameters?: RouteParameter;
   childs: Route[] = [];
   security: any;
 
@@ -20,9 +20,9 @@ class Route {
     this.code = schema.code;
     this.middlewares = schema.middlewares ?? [];
     this.handler = schema.handler;
-    this.request = schema.request ?? {};
     this.response = schema.response ?? {};
-    this.parameters = schema.parameters ?? {};
+    this.request = schema.request ?? undefined;
+    this.parameters = schema.parameters ?? undefined;
 
     if (schema.url) {
       const [method, url] = schema.url.split(" ");
