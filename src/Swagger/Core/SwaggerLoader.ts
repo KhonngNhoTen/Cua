@@ -1,4 +1,3 @@
-import { glob } from "glob";
 import fs from "fs/promises";
 
 import { IRouteHandler } from "../../Route/IRouteHandler";
@@ -12,24 +11,16 @@ import { Path, SwaggerParameter, SwaggerDataTransform, SwaggerResponses } from "
 import { SwaggerBuilder } from "./SwaggerBuilder";
 
 export class SwaggerLoader implements IRouteHandler {
-  async load(path: string) {
-    let routes: Route[] = [];
-
-    /** Load all route by pattern file name. */
-    const files = glob.globSync(path.replace(/\\/g, "/"));
-    for (let i = 0; i < files.length; i++) {
-      const route = require(files[i]).default;
-      routes = [...routes, ...route.listRoutes()];
-    }
-    return routes;
-  }
-
+  /**
+   * Generate swagger options ui and save file
+   * @param routes
+   * @returns
+   */
   async handler(routes: Route[]) {
-    const options = SwaggerBuilder.Instance();
+    const options = SwaggerBuilder.Instance;
 
     for (let i = 0; i < routes.length; i++) {
       const route = routes[i];
-      console.log(route);
       if (!route.isAPI()) continue;
       const path: Path = {
         description: route.description ?? "",
@@ -44,6 +35,8 @@ export class SwaggerLoader implements IRouteHandler {
 
       options.insertApi(route.url ?? "", route.method, path);
     }
+
+    await fs.writeFile(SwaggerBuilder.Instance.PathFile, JSON.stringify(options.Options));
     return options.Options;
   }
 
@@ -63,7 +56,7 @@ export class SwaggerLoader implements IRouteHandler {
       const keys = Object.keys(locationObject);
       for (let j = 0; j < keys.length; j++) {
         const params = locationObject[keys[j]];
-        parameters.push(new Parameter().fromRoute(params, location, keys[j]).genSwagger());
+        parameters.push(new Parameter().fromRoute(params, location, keys[j], location === "path").genSwagger());
       }
     }
 
@@ -76,7 +69,7 @@ export class SwaggerLoader implements IRouteHandler {
       const status = Object.keys(route.response);
       for (let i = 0; i < status.length; i++) {
         const response = route.response[status[i]];
-        const media = response instanceof MediaData ? response : new MediaData().fromRoute(route.response);
+        const media = response instanceof MediaData ? response : new MediaData().fromRoute(response);
         const dataTransform = new DataTransform(media as MediaData);
         resOpts[status[i]] = dataTransform.genSwagger();
       }

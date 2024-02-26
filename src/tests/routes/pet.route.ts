@@ -13,9 +13,7 @@ export default new Route({
       parameters: {
         query: { name: "", id: 0 },
       },
-      handler: async (req, res, next) => {
-        res.send("hello");
-      },
+      handler: async () => {},
       response: { data: [{ name: "", id: 0, age: 0 }] },
     },
     {
@@ -26,9 +24,7 @@ export default new Route({
         name: "",
         age: 0,
       },
-      handler: async (req, res, next) => {
-        res.send("hello");
-      },
+      handler: async () => {},
       response: { data: [{ name: "", id: 0, age: 0 }] },
     },
     {
@@ -40,10 +36,8 @@ export default new Route({
         age: 0,
       },
       parameters: { path: { idPet: "" } },
-      handler: async (req, res, next) => {
-        res.send("hello");
-      },
-      response: { data: [{ name: "", id: 0, age: 0 }] },
+      handler: async () => {},
+      response: { "200": { data: [{ name: "", id: 0, age: 0 }] }, "400": { message: "Fail" } },
     },
   ],
 });

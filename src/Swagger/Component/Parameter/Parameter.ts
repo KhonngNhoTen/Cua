@@ -6,10 +6,16 @@ import { BaseParameter, BaseParameterOptions } from "./BaseParameter";
 import { MediaData } from "../MediaData/MediaData";
 
 export class Parameter extends BaseParameter implements IRouteGenerator {
-  fromRoute(data: RouteDataTransform, location: "query" | "header" | "path" | "cookie", key?: string): BaseParameter {
+  fromRoute(
+    data: RouteDataTransform,
+    location: "query" | "header" | "path" | "cookie",
+    key?: string,
+    required?: boolean
+  ): BaseParameter {
     const opts: BaseParameterOptions = {
       in: location,
       name: key ?? "",
+      required,
     };
 
     const type = new Schema().getType(data);

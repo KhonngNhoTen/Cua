@@ -24,7 +24,7 @@ export class Route {
     this.request = schema.request ?? undefined;
     this.parameters = schema.parameters ?? undefined;
     this.baseUrl = schema.baseUrl;
-    this.tags = schema.tags;
+    this.tags = schema.tags ?? parentSchema?.tags;
 
     if (schema.url && this.isAPI()) {
       let [method, url] = schema.url.split(" ");
@@ -39,9 +39,13 @@ export class Route {
     this.childs = schema.childs ? this.createChilds(schema.childs, schema) : [];
   }
 
+  protected createChilds(schemas: RouteSchema[], currentSchema?: RouteSchema) {
+    if (!schemas || schemas.length < 0) return [];
+    return schemas.map((e) => new Route(e, currentSchema));
+  }
+
   registry(req: any) {
     const middlewares = [...this.middlewares, this.handler];
-    console.log(this.method, this.url, this.baseUrl, this);
     req[this.method](middlewares);
   }
 
@@ -54,10 +58,5 @@ export class Route {
 
   isAPI() {
     return !this.baseUrl;
-  }
-
-  protected createChilds(schemas: RouteSchema[], currentSchema?: RouteSchema) {
-    if (!schemas || schemas.length < 0) return [];
-    return schemas.map((e) => new Route(e, currentSchema));
   }
 }

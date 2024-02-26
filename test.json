@@ -1,0 +1,295 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "description": "This is description",
+        "title": "This is title",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "youtube.com"
+        }
+    ],
+    "paths": {
+        "/pets/": {
+            "get": {
+                "description": "",
+                "summary": "",
+                "tags": [
+                    "Pet"
+                ],
+                "operationId": "PET.LIST",
+                "responses": {
+                    "default": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "age": {
+                                                        "type": "number",
+                                                        "example": 0,
+                                                        "description": "",
+                                                        "format": ""
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "default": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "name": "",
+                                                    "id": 0,
+                                                    "age": 0
+                                                }
+                                            ]
+                                        },
+                                        "description": "",
+                                        "summary": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "",
+                            "description": "",
+                            "format": ""
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "example": 0,
+                            "description": "",
+                            "format": ""
+                        }
+                    }
+                ]
+            },
+            "post": {
+                "description": "",
+                "summary": "",
+                "tags": [
+                    "Pet"
+                ],
+                "operationId": "PET.CREATE",
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "age": {
+                                        "type": "number",
+                                        "example": 0,
+                                        "description": "",
+                                        "format": ""
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "default": {
+                                    "value": {
+                                        "name": "",
+                                        "age": 0
+                                    },
+                                    "description": "",
+                                    "summary": ""
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "age": {
+                                                        "type": "number",
+                                                        "example": 0,
+                                                        "description": "",
+                                                        "format": ""
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "default": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "name": "",
+                                                    "id": 0,
+                                                    "age": 0
+                                                }
+                                            ]
+                                        },
+                                        "description": "",
+                                        "summary": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/pets/{idPet}": {
+            "put": {
+                "description": "",
+                "summary": "",
+                "tags": [
+                    "Pet"
+                ],
+                "operationId": "PET.UPDATE",
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "age": {
+                                        "type": "number",
+                                        "example": 0,
+                                        "description": "",
+                                        "format": ""
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "default": {
+                                    "value": {
+                                        "name": "",
+                                        "age": 0
+                                    },
+                                    "description": "",
+                                    "summary": ""
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "age": {
+                                                        "type": "number",
+                                                        "example": 0,
+                                                        "description": "",
+                                                        "format": ""
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "default": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "name": "",
+                                                    "id": 0,
+                                                    "age": 0
+                                                }
+                                            ]
+                                        },
+                                        "description": "",
+                                        "summary": ""
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Fail",
+                                            "description": "",
+                                            "format": ""
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "default": {
+                                        "value": {
+                                            "message": "Fail"
+                                        },
+                                        "description": "",
+                                        "summary": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "idPet",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "",
+                            "description": "",
+                            "format": ""
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,51 +1,34 @@
-import { glob } from "glob";
 import normalizationRoute from "../RouteNormalization/RouteNormalization";
 import { IRouteHandler } from "./IRouteHandler";
 import { Route } from "./Route";
 import { NormalizationRoute } from "./type";
 
+type RouteLoaderOptions = {
+  normalization?: NormalizationRoute;
+  routeHandlers?: IRouteHandler[];
+};
 class RouteLoader implements IRouteHandler {
   private normalization: NormalizationRoute;
   private routeHandlers: IRouteHandler[];
 
-  constructor() {
-    this.normalization = normalizationRoute;
-    this.routeHandlers = [this];
+  constructor(options: RouteLoaderOptions) {
+    this.normalization = options?.normalization ?? normalizationRoute;
+    this.routeHandlers = options?.routeHandlers ?? [];
   }
 
-  async handler(routes: Route[], request: any) {
+  async handler(routes: Route[], router: any) {
     routes.forEach((route) => {
-      route.registry(request);
+      route.registry(router);
     });
   }
 
-  async load(path: string, request: any) {
-    this.routeHandlers.push(this);
-    let routes: Route[] = [];
-
-    /** Load all route by pattern file name. */
-    const files = glob.globSync(path.replace(/\\/g, "/"));
-    for (let i = 0; i < files.length; i++) {
-      const route = require(files[i]).default;
-      routes = [...routes, ...route.listRoutes()];
-    }
-
-    /**  Call handler in list. */
+  async load(routes: Route[], router: any) {
     let data;
-    for (let i = 0; i < this.routeHandlers.length; i++)
-      data = await this.routeHandlers[i].handler(routes, request, data);
-    console.log("Done");
-    return this;
-  }
+    for (let i = 0; i < this.routeHandlers.length; i++) data = await this.routeHandlers[i].handler(routes, data);
 
-  addHandlers(routeHandlers: IRouteHandler) {
-    this.routeHandlers = [...this.routeHandlers, routeHandlers];
-    return this;
-  }
+    await this.handler(routes, router);
 
-  addRouteNormalization(normalization: NormalizationRoute) {
-    this.normalization = normalization;
-    return this;
+    console.log("Done registry apis");
   }
 }
 

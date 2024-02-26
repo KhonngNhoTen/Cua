@@ -1,13 +1,16 @@
 import { SwaggerExportSchema, Path, ExternalDocs } from "../type";
 export class SwaggerBuilder {
   private options: SwaggerExportSchema = { openapi: "", info: {}, servers: [], paths: {} };
-  pathFile: string = "";
+  private pathFile: string = "";
   get Options() {
     return this.options;
   }
+  get PathFile() {
+    return this.pathFile;
+  }
 
   private static instance: SwaggerBuilder;
-  static Instance() {
+  static get Instance() {
     if (!SwaggerBuilder.instance) SwaggerBuilder.instance = new SwaggerBuilder();
     return SwaggerBuilder.instance;
   }

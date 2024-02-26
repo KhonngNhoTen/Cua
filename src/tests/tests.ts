@@ -1,22 +1,21 @@
-import fs from "fs/promises";
+import { glob } from "glob";
 import path from "path";
+import { Route } from "../Route/Route";
 import RouteLoader from "../Route/RouteLoader";
 import { SwaggerBuilder } from "../Swagger/Core/SwaggerBuilder";
 import { SwaggerLoader } from "../Swagger/Core/SwaggerLoader";
 
-SwaggerBuilder.Instance()
-  .addServers(["youtube.com"])
-  .addPathFile("test.json")
-  .addApiInfo("Test title", "check description", "1.0.0");
+SwaggerBuilder.Instance.addServers(["youtube.com"])
+  .addApiInfo("This is title", "This is description", "1.0.0")
+  .addPathFile("test.json");
 
-const loader = new RouteLoader().addHandlers(new SwaggerLoader());
+const router = { get: () => {}, post: () => {}, put: () => {} };
 
-const request = { get: () => {}, post: () => {}, put: () => {} };
+const routes = glob.globSync(path.join(__dirname, "./routes/**.route.ts")).reduce((init, val) => {
+  const route = require(val).default as Route;
+  return [...init, ...route.listRoutes()];
+}, [] as Route[]);
 
 (async () => {
-  // await loader.load(path.join(__dirname, "./routes/**.route.ts"), request);
-  const routes = await new SwaggerLoader().load(path.join(__dirname, "./routes/**.route.ts"));
-  console.log(routes);
-  const opts = await new SwaggerLoader().handler(routes);
-  await fs.writeFile(SwaggerBuilder.Instance().pathFile, JSON.stringify(opts));
+  await new RouteLoader({ routeHandlers: [new SwaggerLoader()] }).load(routes, router);
 })();
