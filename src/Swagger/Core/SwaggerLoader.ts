@@ -2,7 +2,7 @@ import { glob } from "glob";
 import fs from "fs/promises";
 
 import { IRouteHandler } from "../../Route/IRouteHandler";
-import Route from "../../Route/Route";
+import { Route } from "../../Route/Route";
 import { LocationParameter } from "../../Route/type";
 import { DataTransform } from "../Component/DataTransform/DataTransform";
 import { MediaData } from "../Component/MediaData/MediaData";
@@ -18,7 +18,7 @@ export class SwaggerLoader implements IRouteHandler {
     /** Load all route by pattern file name. */
     const files = glob.globSync(path.replace(/\\/g, "/"));
     for (let i = 0; i < files.length; i++) {
-      const route = new Route(require(files[i]));
+      const route = require(files[i]).default;
       routes = [...routes, ...route.listRoutes()];
     }
     return routes;
@@ -29,6 +29,8 @@ export class SwaggerLoader implements IRouteHandler {
 
     for (let i = 0; i < routes.length; i++) {
       const route = routes[i];
+      console.log(route);
+      if (!route.isAPI()) continue;
       const path: Path = {
         description: route.description ?? "",
         summary: route.summary ?? "",
@@ -40,9 +42,9 @@ export class SwaggerLoader implements IRouteHandler {
         security: route.security ?? undefined,
       };
 
-      options.insertApi(route.url, route.method, path);
-      await fs.writeFile(SwaggerBuilder.Instance().pathFile, JSON.stringify(SwaggerBuilder.Instance().Options));
+      options.insertApi(route.url ?? "", route.method, path);
     }
+    return options.Options;
   }
 
   createRequestBody(route: Route): SwaggerDataTransform | null {

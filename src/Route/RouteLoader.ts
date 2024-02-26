@@ -1,7 +1,7 @@
 import { glob } from "glob";
 import normalizationRoute from "../RouteNormalization/RouteNormalization";
 import { IRouteHandler } from "./IRouteHandler";
-import Route from "./Route";
+import { Route } from "./Route";
 import { NormalizationRoute } from "./type";
 
 class RouteLoader implements IRouteHandler {
@@ -15,17 +15,18 @@ class RouteLoader implements IRouteHandler {
 
   async handler(routes: Route[], request: any) {
     routes.forEach((route) => {
-      request[route.method](route.url, route.middlewares);
+      route.registry(request);
     });
   }
 
   async load(path: string, request: any) {
+    this.routeHandlers.push(this);
     let routes: Route[] = [];
 
     /** Load all route by pattern file name. */
     const files = glob.globSync(path.replace(/\\/g, "/"));
     for (let i = 0; i < files.length; i++) {
-      const route = new Route(require(files[i]));
+      const route = require(files[i]).default;
       routes = [...routes, ...route.listRoutes()];
     }
 
@@ -33,16 +34,12 @@ class RouteLoader implements IRouteHandler {
     let data;
     for (let i = 0; i < this.routeHandlers.length; i++)
       data = await this.routeHandlers[i].handler(routes, request, data);
+    console.log("Done");
     return this;
   }
 
-  done(callback: Function) {
-    callback();
-    return this;
-  }
-
-  addHandlers(routeHandlers: IRouteHandler[]) {
-    this.routeHandlers = [...routeHandlers, ...this.routeHandlers];
+  addHandlers(routeHandlers: IRouteHandler) {
+    this.routeHandlers = [...this.routeHandlers, routeHandlers];
     return this;
   }
 

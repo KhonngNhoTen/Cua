@@ -1,6 +1,6 @@
 import { SwaggerExportSchema, Path, ExternalDocs } from "../type";
 export class SwaggerBuilder {
-  private options: SwaggerExportSchema = { servers: [], paths: {} };
+  private options: SwaggerExportSchema = { openapi: "", info: {}, servers: [], paths: {} };
   pathFile: string = "";
   get Options() {
     return this.options;

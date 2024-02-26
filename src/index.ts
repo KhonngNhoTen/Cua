@@ -1,4 +1,4 @@
-import Route from "./Route/Route";
+import { Route } from "./Route/Route";
 import RouteNormalization from "./RouteNormalization/RouteNormalization";
 import { SwaggerBuilder } from "./Swagger/Core/SwaggerBuilder";
 

@@ -5,7 +5,7 @@ export type SwaggerExportSchema = {
     url: string;
   }[];
   externalDocs?: ExternalDocs;
-  tags?: Tags[];
+  tags?: Tags[] | string[];
   paths: { [path: string]: { [httpMethod: string]: Path } };
 };
 

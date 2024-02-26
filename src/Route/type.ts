@@ -1,4 +1,3 @@
-import RouteNormalization from "../RouteNormalization/RouteNormalization";
 import { SwaggerBuilder } from "../Swagger/Core/SwaggerBuilder";
 import RouteLoader from "./RouteLoader";
 
@@ -9,12 +8,13 @@ export type RouteSchema = {
   url?: string;
   method?: string;
   middlewares?: Promise<void>[];
-  handler?: Promise<void>;
+  handler?: (...params: any) => Promise<void>;
   request?: Object;
   response?: Record<string, RouteDataTransform> | RouteDataTransform;
   parameters?: RouteParameter;
   childs?: RouteSchema[];
   security?: any;
+  baseUrl?: string;
 };
 
 export type NormalizationRoute = (...param: any[]) => { req: any; res: any; next: any; extraData: any };
