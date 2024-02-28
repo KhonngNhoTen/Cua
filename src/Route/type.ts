@@ -12,7 +12,7 @@ export type RouteSchema = {
   handler?: (...params: any) => Promise<void>;
   request?: Object | BaseRouteDataTransform;
   response?: Record<string, RouteDataTransform | BaseRouteDataTransform> | BaseRouteDataTransform;
-  parameters?: RouteParameter;
+  parameters?: string[] | RouteParameter;
   childs?: RouteSchema[];
   security?: boolean | string[];
   baseUrl?: string;

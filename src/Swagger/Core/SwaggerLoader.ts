@@ -79,6 +79,7 @@ export class SwaggerLoader implements IRouteHandler {
     const locations = ["path", "cookie", "query", "header"];
     const parameters: SwaggerParameter[] = [];
     for (let i = 0; i < locations.length; i++) {
+
       const location = locations[i] as LocationParameter;
       const locationObject = (route.parameters[location] as any) ?? {};
       const keys = Object.keys(locationObject);

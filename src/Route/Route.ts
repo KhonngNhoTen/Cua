@@ -23,10 +23,12 @@ export class Route {
     this.handler = schema.handler;
     this.response = schema.response ?? {};
     this.request = schema.request ?? undefined;
-    this.parameters = schema.parameters ?? undefined;
     this.baseUrl = schema.baseUrl;
     this.tags = schema.tags ?? parentSchema?.tags;
     this.security = schema.security;
+
+    this.parameters = Array.isArray(schema.parameters) ? { query: schema.parameters.reduce((init, val) => ({ ...init, [val]: "" }), {}) } : schema.parameters;
+
 
     if (schema.url && this.isAPI()) this.getParams(schema.url, parentSchema?.baseUrl);
 
