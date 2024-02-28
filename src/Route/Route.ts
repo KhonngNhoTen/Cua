@@ -1,3 +1,4 @@
+import { BaseRouteDataTransform } from "./BaseRouteDataTransform";
 import { RouteDataTransform, RouteParameter, RouteSchema } from "./type";
 
 export class Route {
@@ -10,11 +11,11 @@ export class Route {
   tags?: string[];
   middlewares: Promise<void>[] = [];
   handler?: (...params: any) => Promise<void>;
-  request?: Object;
-  response: Record<string, RouteDataTransform> = {};
+  request?: Object | BaseRouteDataTransform;
+  response: Record<string, RouteDataTransform | BaseRouteDataTransform> | BaseRouteDataTransform = {};
   parameters?: RouteParameter;
   childs: Route[];
-  security: any;
+  security?: string[] | boolean;
 
   constructor(schema: RouteSchema, parentSchema?: RouteSchema) {
     this.code = schema.code;
@@ -25,16 +26,9 @@ export class Route {
     this.parameters = schema.parameters ?? undefined;
     this.baseUrl = schema.baseUrl;
     this.tags = schema.tags ?? parentSchema?.tags;
+    this.security = schema.security;
 
-    if (schema.url && this.isAPI()) {
-      let [method, url] = schema.url.split(" ");
-      if (!method || !url) throw new Error("Url's format is : '<METHOD> <PATH>'");
-
-      url = url.replace(/:\w+/g, (params) => `{${params.replace(":", "")}}`);
-
-      this.url = parentSchema?.baseUrl ? parentSchema?.baseUrl + url : url;
-      this.method = method.toLocaleLowerCase();
-    }
+    if (schema.url && this.isAPI()) this.getParams(schema.url, parentSchema?.baseUrl);
 
     this.childs = schema.childs ? this.createChilds(schema.childs, schema) : [];
   }
@@ -42,6 +36,26 @@ export class Route {
   protected createChilds(schemas: RouteSchema[], currentSchema?: RouteSchema) {
     if (!schemas || schemas.length < 0) return [];
     return schemas.map((e) => new Route(e, currentSchema));
+  }
+
+  getParams(routeUrl: string, baseUrl?: string) {
+    let [method, url] = routeUrl.split(" ");
+    if (!method || !url) throw new Error("Url's format is : '<METHOD> <PATH>'");
+
+    let params: any = {};
+    url = url.replace(/:\w+/g, (param) => {
+      param = param.replace(":", "");
+      params[param] = "";
+      return `{${param}}`;
+    });
+
+    this.parameters = {
+      ...this.parameters,
+      path: params,
+    };
+
+    this.url = baseUrl ? baseUrl + url : url;
+    this.method = method.toLocaleLowerCase();
   }
 
   registry(req: any) {

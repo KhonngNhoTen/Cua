@@ -1,7 +1,7 @@
 import { RouteDataTransform } from "../../../Route/type";
 import { IRouteGenerator } from "../../Core/IRouteGenerator";
 import { ISwaggerComponent } from "../../Core/ISwaggerComponent";
-import { SwaggerDataTransform, SwaggerMediaData } from "../../type";
+import { SwaggerDataTransform } from "../../type";
 import { MediaData } from "../MediaData/MediaData";
 import { ContentTypeString } from "../MediaData/MediaType";
 import { Schema } from "../Schema/Schema";
@@ -23,7 +23,7 @@ export class DataTransform implements ISwaggerComponent, IRouteGenerator {
     return {
       description: this.mediaData.description,
       content: {
-        [ContentTypeString[this.mediaData.contentType]]: this.mediaData.genSwagger(),
+        [this.mediaData.contentType]: this.mediaData.genSwagger(),
       },
     };
   }

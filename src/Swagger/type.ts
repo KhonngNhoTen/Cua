@@ -7,6 +7,9 @@ export type SwaggerExportSchema = {
   externalDocs?: ExternalDocs;
   tags?: Tags[] | string[];
   paths: { [path: string]: { [httpMethod: string]: Path } };
+  components?: {
+    securitySchemes?: Record<string, SwaggerSecurity>;
+  };
 };
 
 export type ApiInfo = {
@@ -88,4 +91,14 @@ export type SwaggerDataTransform = {
 
 export type SwaggerResponses = {
   [httpStatus: string]: SwaggerDataTransform;
+};
+
+export type SwaggerSecurity = {
+  type: "apiKey" | "http" | "oauth2";
+  name?: string;
+  description?: string;
+  in?: "query" | "header" | "cookie";
+  scheme?: string;
+  bearerFormat?: string;
+  isDefault?: boolean;
 };

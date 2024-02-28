@@ -2,13 +2,15 @@ import fs from "fs/promises";
 
 import { IRouteHandler } from "../../Route/IRouteHandler";
 import { Route } from "../../Route/Route";
-import { LocationParameter } from "../../Route/type";
+import { BaseRouteDataTransform } from "../../Route/BaseRouteDataTransform";
+import { LocationParameter, RouteDataTransform } from "../../Route/type";
 import { DataTransform } from "../Component/DataTransform/DataTransform";
 import { MediaData } from "../Component/MediaData/MediaData";
 import { Parameter } from "../Component/Parameter/Parameter";
 
 import { Path, SwaggerParameter, SwaggerDataTransform, SwaggerResponses } from "../type";
 import { SwaggerBuilder } from "./SwaggerBuilder";
+import { BaseSchema, TYPES } from "../Component/Schema/BaseSchema";
 
 export class SwaggerLoader implements IRouteHandler {
   /**
@@ -30,7 +32,7 @@ export class SwaggerLoader implements IRouteHandler {
         requestBody: this.createRequestBody(route) ?? undefined,
         responses: this.createResponse(route),
         parameters: this.createParameters(route) ?? undefined,
-        security: route.security ?? undefined,
+        security: this.createSecurity(route.security) ?? undefined,
       };
 
       options.insertApi(route.url ?? "", route.method, path);
@@ -42,8 +44,34 @@ export class SwaggerLoader implements IRouteHandler {
 
   createRequestBody(route: Route): SwaggerDataTransform | null {
     if (!route.request) return null;
-    if (route.request instanceof MediaData) return new DataTransform(route.request).genSwagger();
+    if (route.request instanceof BaseRouteDataTransform) return route.request.dataTransform().genSwagger();
     return new DataTransform(new MediaData().fromRoute(route.request)).genSwagger();
+  }
+
+  createResponse(route: Route): SwaggerResponses {
+    let resOpts: SwaggerResponses = {};
+    if (SwaggerLoader.isWrapperRepsonse(route.response)) {
+      const status = Object.keys(route.response);
+      for (let i = 0; i < status.length; i++) {
+        const response = (route.response as Record<string, RouteDataTransform | BaseRouteDataTransform>)[status[i]];
+
+        // const media = response instanceof MediaData ? response : new MediaData().fromRoute(response);
+        const dataTransform =
+          response instanceof BaseRouteDataTransform
+            ? response.dataTransform()
+            : new DataTransform(new MediaData().fromRoute(response));
+
+        resOpts[status[i]] = dataTransform.genSwagger();
+      }
+    } else {
+      const dataTransform =
+        route.response instanceof BaseRouteDataTransform
+          ? route.response.dataTransform()
+          : new DataTransform(new MediaData().fromRoute(route.response));
+
+      resOpts.default = dataTransform.genSwagger();
+    }
+    return resOpts;
   }
 
   createParameters(route: Route): SwaggerParameter[] | null {
@@ -63,22 +91,15 @@ export class SwaggerLoader implements IRouteHandler {
     return parameters;
   }
 
-  createResponse(route: Route): SwaggerResponses {
-    let resOpts: SwaggerResponses = {};
-    if (SwaggerLoader.isWrapperRepsonse(route.response)) {
-      const status = Object.keys(route.response);
-      for (let i = 0; i < status.length; i++) {
-        const response = route.response[status[i]];
-        const media = response instanceof MediaData ? response : new MediaData().fromRoute(response);
-        const dataTransform = new DataTransform(media as MediaData);
-        resOpts[status[i]] = dataTransform.genSwagger();
-      }
-    } else {
-      const media = route.response instanceof MediaData ? route.response : new MediaData().fromRoute(route.response);
-      const dataTransform = new DataTransform(media as MediaData);
-      resOpts.default = dataTransform.genSwagger();
-    }
-    return resOpts;
+  createSecurity(security?: string[] | boolean): Array<Record<string, string[]>> | undefined {
+    if (security === undefined) return undefined;
+
+    const securities = SwaggerBuilder.Instance.Securities;
+    if (new BaseSchema().getType(security) === TYPES.BOOLEAN) return [{ ["default"]: [] }];
+
+    return (security as string[]).map((e) => {
+      return { e: [] };
+    });
   }
 
   static isWrapperRepsonse(response: Object) {

@@ -1,12 +1,16 @@
-import { SwaggerExportSchema, Path, ExternalDocs } from "../type";
+import { SwaggerExportSchema, Path, ExternalDocs, SwaggerSecurity } from "../type";
 export class SwaggerBuilder {
   private options: SwaggerExportSchema = { openapi: "", info: {}, servers: [], paths: {} };
   private pathFile: string = "";
+  private securities?: Record<string, SwaggerSecurity>;
   get Options() {
     return this.options;
   }
   get PathFile() {
     return this.pathFile;
+  }
+  get Securities() {
+    return this.securities;
   }
 
   private static instance: SwaggerBuilder;
@@ -42,6 +46,26 @@ export class SwaggerBuilder {
 
   public addTag(tags: []) {
     this.options.tags = tags;
+    return this;
+  }
+
+  public addSecurity(securityOpts: Record<string, SwaggerSecurity>) {
+    const key = Object.keys(securityOpts)[0];
+    const security = securityOpts[key];
+
+    const isDefault = Object.keys(this?.securities ?? {}).length === 0;
+    this.securities = { ...this.securities, [isDefault ? "default" : key]: security };
+    delete security.isDefault;
+
+    if (!this.options.components) {
+      this.options.components = { securitySchemes: { [isDefault ? "default" : key]: security } };
+    } else {
+      this.options.components.securitySchemes = {
+        ...this.options.components.securitySchemes,
+        [isDefault ? "default" : key]: security,
+      };
+    }
+
     return this;
   }
 

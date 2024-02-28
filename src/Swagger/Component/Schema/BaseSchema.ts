@@ -17,6 +17,8 @@ export enum TYPES {
   NUMBER,
   OBJECT,
   ARRAY,
+  FILE,
+  BOOLEAN,
 }
 export class BaseSchema implements ISwaggerComponent {
   public type?: TYPES;
@@ -65,11 +67,11 @@ export class BaseSchema implements ISwaggerComponent {
       this.structures = {
         type: "object",
         properties: {
+          ...this.structures.properties,
           [key ?? schema.name]: schema.genSwagger(),
         },
       };
     }
-
     return this;
   }
 
@@ -79,6 +81,7 @@ export class BaseSchema implements ISwaggerComponent {
     if (type === "string") return TYPES.STRING;
     if (type === "object") return TYPES.OBJECT;
     if (type === "array") return TYPES.ARRAY;
+    if (type === "boolean") return TYPES.BOOLEAN;
 
     if (typeof value === "object") return TYPES.OBJECT;
 

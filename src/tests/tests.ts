@@ -7,7 +7,13 @@ import { SwaggerLoader } from "../Swagger/Core/SwaggerLoader";
 
 SwaggerBuilder.Instance.addServers(["youtube.com"])
   .addApiInfo("This is title", "This is description", "1.0.0")
-  .addPathFile("test.json");
+  .addPathFile("test.json")
+  .addSecurity({
+    default: {
+      type: "http",
+      scheme: "basic",
+    },
+  });
 
 const router = { get: () => {}, post: () => {}, put: () => {} };
 

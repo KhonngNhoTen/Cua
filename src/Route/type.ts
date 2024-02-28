@@ -1,4 +1,5 @@
 import { SwaggerBuilder } from "../Swagger/Core/SwaggerBuilder";
+import { BaseRouteDataTransform } from "./BaseRouteDataTransform";
 import RouteLoader from "./RouteLoader";
 
 export type RouteSchema = {
@@ -9,11 +10,11 @@ export type RouteSchema = {
   method?: string;
   middlewares?: Promise<void>[];
   handler?: (...params: any) => Promise<void>;
-  request?: Object;
-  response?: Record<string, RouteDataTransform> | RouteDataTransform;
+  request?: Object | BaseRouteDataTransform;
+  response?: Record<string, RouteDataTransform | BaseRouteDataTransform> | BaseRouteDataTransform;
   parameters?: RouteParameter;
   childs?: RouteSchema[];
-  security?: any;
+  security?: boolean | string[];
   baseUrl?: string;
 };
 

@@ -40,7 +40,7 @@ export abstract class BaseParameter implements ISwaggerComponent {
       required: this.required,
     };
     if (this.schema) schemaOpts.schema = this.schema.genSwagger();
-    if (this.content) schemaOpts.content = { [ContentTypeString[this.content.contentType]]: this.content.genSwagger() };
+    if (this.content) schemaOpts.content = { [this.content.contentType]: this.content.genSwagger() };
     return schemaOpts;
   }
 }

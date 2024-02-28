@@ -4,26 +4,26 @@ import { SwaggerMediaDataItem } from "../../type";
 import { Example } from "../Example/Example";
 import { BaseSchema } from "../Schema/BaseSchema";
 import { Schema } from "../Schema/Schema";
-import { ContentType } from "./MediaType";
+import { ContentType, ContentTypeString } from "./MediaType";
 
 export type MediaDataOptions = {
   schema: BaseSchema;
   examples?: Record<string, Example>;
   description?: string;
-  contentType?: ContentType;
+  contentType?: string;
 };
 
 export class MediaData implements ISwaggerComponent, IRouteGenerator {
   schema: BaseSchema;
   examples: Record<string, Example>;
   description: string;
-  contentType: ContentType;
+  contentType: string;
 
   constructor(options?: MediaDataOptions) {
     this.schema = options?.schema ?? new Schema();
     this.examples = options?.examples ?? {};
     this.description = options?.description ?? "";
-    this.contentType = options?.contentType ?? ContentType.JSON;
+    this.contentType = options?.contentType ?? ContentTypeString[ContentType.JSON];
   }
 
   genSwagger(): SwaggerMediaDataItem {
@@ -31,11 +31,9 @@ export class MediaData implements ISwaggerComponent, IRouteGenerator {
       (init, val) => ({ ...init, [val]: this.examples[val].genSwagger() }),
       {}
     );
-
-    return {
-      schema: this.schema.genSwagger(),
-      examples,
-    };
+    const swaggerOpts: SwaggerMediaDataItem = { schema: this.schema.genSwagger() };
+    if (Object.keys(this.examples).length > 0) swaggerOpts.examples = examples;
+    return swaggerOpts;
   }
 
   fromRoute(data: any): MediaData {
