@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 
-import { IRouteHandler } from "../../Route/IRouteHandler";
 import { Route } from "../../Route/Route";
 import { BaseRouteDataTransform } from "../../Route/BaseRouteDataTransform";
 import { LocationParameter, RouteDataTransform } from "../../Route/type";
@@ -11,8 +10,14 @@ import { Parameter } from "../Component/Parameter/Parameter";
 import { Path, SwaggerParameter, SwaggerDataTransform, SwaggerResponses } from "../type";
 import { SwaggerBuilder } from "./SwaggerBuilder";
 import { BaseSchema, TYPES } from "../Component/Schema/BaseSchema";
+import { IRouteHandler, RouteHandler } from "../../Route/RouteHandler";
 
 export class SwaggerLoader implements IRouteHandler {
+  genRouteHandler(): RouteHandler {
+    return {
+      updateRoute: this.handler,
+    };
+  }
   /**
    * Generate swagger options ui and save file
    * @param routes
@@ -79,7 +84,6 @@ export class SwaggerLoader implements IRouteHandler {
     const locations = ["path", "cookie", "query", "header"];
     const parameters: SwaggerParameter[] = [];
     for (let i = 0; i < locations.length; i++) {
-
       const location = locations[i] as LocationParameter;
       const locationObject = (route.parameters[location] as any) ?? {};
       const keys = Object.keys(locationObject);

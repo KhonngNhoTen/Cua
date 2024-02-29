@@ -1,4 +1,4 @@
-import { Route } from "../../Route/Route";
+import { SwaggerHelper } from "../SwaggerHelper";
 import { SwaggerExportSchema, Path, ExternalDocs, SwaggerSecurity } from "../type";
 export class SwaggerBuilder {
   private options: SwaggerExportSchema = { openapi: "", info: {}, servers: [], paths: {} };
@@ -29,11 +29,21 @@ export class SwaggerBuilder {
     return this;
   }
 
-  public addApiInfo(title: string, description: string, version: string) {
+  public addTitle(title: string) {
     if (!this.options.info) this.options.info = {};
 
-    this.options.info.description = description;
     this.options.info.title = title;
+    return this;
+  }
+
+  public addDescription(description: string) {
+    if (!this.options.info) this.options.info = {};
+    this.options.info.description = description;
+    return this;
+  }
+
+  public addVersion(version: string) {
+    if (!this.options.info) this.options.info = {};
     this.options.info.version = version;
     return this;
   }
@@ -76,7 +86,7 @@ export class SwaggerBuilder {
   }
 
   private insertPath(url: string): { [httpMethod: string]: Path } {
-    const path = Route.formatUrl2SwaggerPath(url);
+    const path = SwaggerHelper.formatUrl2SwaggerPath(url);
     if (!this.options.paths[path]) this.options.paths[path] = {};
 
     return this.options.paths[path];
