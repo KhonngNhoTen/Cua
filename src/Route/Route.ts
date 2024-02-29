@@ -27,8 +27,9 @@ export class Route {
     this.tags = schema.tags ?? parentSchema?.tags;
     this.security = schema.security;
 
-    this.parameters = Array.isArray(schema.parameters) ? { query: schema.parameters.reduce((init, val) => ({ ...init, [val]: "" }), {}) } : schema.parameters;
-
+    this.parameters = Array.isArray(schema.parameters)
+      ? { query: schema.parameters.reduce((init, val) => ({ ...init, [val]: "" }), {}) }
+      : schema.parameters;
 
     if (schema.url && this.isAPI()) this.getParams(schema.url, parentSchema?.baseUrl);
 
@@ -45,12 +46,8 @@ export class Route {
     if (!method || !url) throw new Error("Url's format is : '<METHOD> <PATH>'");
 
     let params: any = {};
-    url = url.replace(/:\w+/g, (param) => {
-      param = param.replace(":", "");
-      params[param] = "";
-      return `{${param}}`;
-    });
 
+    Route.formatUrl2SwaggerPath(url, (param) => (params[param] = ""));
     this.parameters = {
       ...this.parameters,
       path: params,
@@ -60,9 +57,20 @@ export class Route {
     this.method = method.toLocaleLowerCase();
   }
 
+  static formatUrl2SwaggerPath(url: string, handler: (param: string) => void = () => {}) {
+    url = url.replace(/:\w+/g, (param) => {
+      param = param.replace(":", "");
+      handler(param);
+      return `{${param}}`;
+    });
+    return url;
+  }
+
   registry(req: any) {
-    const middlewares = [...this.middlewares, this.handler];
-    req[this.method](middlewares);
+    if (this.isAPI()) {
+      const middlewares = [...this.middlewares, this.handler];
+      req[this.method](this.url, middlewares);
+    }
   }
 
   listRoutes() {
