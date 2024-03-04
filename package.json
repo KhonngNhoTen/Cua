@@ -1,6 +1,6 @@
 {
   "name": "cua-tools",
-  "version": "1.0.1-beta",
+  "version": "1.0.2-beta",
   "description": "Tool auto-gen swagger for expressJs, KoaJs,...",
   "main": "build/index.js",
   "types": "build/index.d.ts",
