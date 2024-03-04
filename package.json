@@ -1,9 +1,9 @@
 {
-  "name": "cua",
-  "version": "1.0.0",
+  "name": "cua-tools",
+  "version": "1.0.1-beta",
   "description": "Tool auto-gen swagger for expressJs, KoaJs,...",
-  "main": "./buld/index.js",
-  "types": "./buld/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf ./build && tsc",
