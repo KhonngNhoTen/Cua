@@ -1,0 +1,37 @@
+{
+  "name": "cua-tools",
+  "version": "1.0.3-beta",
+  "description": "Tool auto-gen swagger for expressJs, KoaJs,...",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf ./build && tsc",
+    "watch": "tsc -w && npm run build",
+    "watch:win": "tsc -w && npm run build:win",
+    "build:win": "rmdir /s /q  .\\build && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KhonngNhoTen/Cua.git"
+  },
+  "keywords": [
+    "auto-gen",
+    "swagger"
+  ],
+  "author": "KhonngNhoTen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KhonngNhoTen/Cua/issues"
+  },
+  "homepage": "https://github.com/KhonngNhoTen/Cua#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "glob": "^10.3.10",
+    "jest": "^29.7.0",
+    "ts-node": "^10.9.2"
+  }
+}
