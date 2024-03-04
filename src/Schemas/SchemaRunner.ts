@@ -19,7 +19,7 @@ export class SchemaRunner implements IRouteHandler {
   genRouteHandler(): RouteHandler {
     return {
       // middleware: this.validating ? this.genMiddleware : undefined,
-      updateByRoute: this.updateRoute,
+      updateByRoute: async (routes: Route[]) => await this.updateRoute(routes),
     };
   }
 

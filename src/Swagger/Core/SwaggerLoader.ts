@@ -15,7 +15,7 @@ import { IRouteHandler, RouteHandler } from "../../Route/RouteHandler";
 export class SwaggerLoader implements IRouteHandler {
   genRouteHandler(): RouteHandler {
     return {
-      updateByRoute: this.handler,
+      updateByRoute: async (routes) => await this.handler(routes),
     };
   }
   /**
