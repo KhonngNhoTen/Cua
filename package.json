@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Tool auto-gen swagger for expressJs, KoaJs,...",
   "main": "./buld/index.js",
-  "types": "",
+  "types": "./buld/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf ./build && tsc",
