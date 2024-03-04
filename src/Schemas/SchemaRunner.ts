@@ -23,7 +23,7 @@ export class SchemaRunner implements IRouteHandler {
     };
   }
 
-  private async updateRoute(routes: Route[], extraData: any) {
+  private async updateRoute(routes: Route[], extraData?: any) {
     for (let i = 0; i < routes.length; i++) {
       const route = routes[i];
       if (route.request instanceof Schema) route.request = route.request.data;

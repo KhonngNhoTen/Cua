@@ -50,7 +50,7 @@ export class Schema extends BaseSchema implements IRouteGenerator {
     const schema: Schema = new Schema({ type });
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      schema.addNode(this.fromRoute(request[key], key));
+      schema.addNode(this.fromRoute(request[key], key), key);
     }
 
     return schema;
