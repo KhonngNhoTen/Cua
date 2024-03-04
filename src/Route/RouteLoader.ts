@@ -1,15 +1,15 @@
 import normalizationRoute from "../RouteNormalization/RouteNormalization";
-import { IRouteHandler } from "./IRouteHandler";
 import { Route } from "./Route";
+import { IRouteHandler, isIRouteHandler, RouteHandler } from "./RouteHandler";
 import { NormalizationRoute } from "./type";
 
 type RouteLoaderOptions = {
   normalization?: NormalizationRoute;
-  routeHandlers?: IRouteHandler[];
+  routeHandlers?: IRouteHandler[] | RouteHandler[];
 };
-class RouteLoader implements IRouteHandler {
+class RouteLoader {
   private normalization: NormalizationRoute;
-  private routeHandlers: IRouteHandler[];
+  private routeHandlers: IRouteHandler[] | RouteHandler[];
 
   constructor(options: RouteLoaderOptions) {
     this.normalization = options?.normalization ?? normalizationRoute;
@@ -24,7 +24,12 @@ class RouteLoader implements IRouteHandler {
 
   async load(routes: Route[], router: any) {
     let data;
-    for (let i = 0; i < this.routeHandlers.length; i++) data = await this.routeHandlers[i].handler(routes, data);
+    for (let i = 0; i < this.routeHandlers.length; i++) {
+      const routeHandler = this.routeHandlers[i];
+      let handler = routeHandler as RouteHandler;
+      if (isIRouteHandler(routeHandler)) handler = routeHandler.genRouteHandler();
+      if (handler.updateByRoute) data = await handler.updateByRoute(routes, data);
+    }
 
     await this.handler(routes, router);
 

@@ -15,7 +15,7 @@ import { IRouteHandler, RouteHandler } from "../../Route/RouteHandler";
 export class SwaggerLoader implements IRouteHandler {
   genRouteHandler(): RouteHandler {
     return {
-      updateRoute: this.handler,
+      updateByRoute: this.handler,
     };
   }
   /**
@@ -98,8 +98,6 @@ export class SwaggerLoader implements IRouteHandler {
 
   createSecurity(security?: string[] | boolean): Array<Record<string, string[]>> | undefined {
     if (security === undefined) return undefined;
-
-    const securities = SwaggerBuilder.Instance.Securities;
     if (new BaseSchema().getType(security) === TYPES.BOOLEAN) return [{ ["default"]: [] }];
 
     return (security as string[]).map((e) => {

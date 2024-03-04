@@ -1,4 +1,6 @@
 export class Schema {
+  data: any = {};
+
   optional(fields: string[]) {
     return this;
   }

@@ -1,10 +1,10 @@
 import { Route } from "./Route";
 
-export type UpdateRouteFunction = (routes: Route[], extraData: any) => Promise<any>;
+export type UpdateByRouteFunction = (routes: Route[], extraData: any) => Promise<any>;
 export type MiddlewareFunction = (req: any, res: any, next: any, extraData: any) => Promise<any>;
 export type CreateMiddlewareFunction = (routes: Route, extraData: any) => MiddlewareFunction;
 export type RouteHandler = {
-  updateRoute?: UpdateRouteFunction;
+  updateByRoute?: UpdateByRouteFunction;
   middleware?: CreateMiddlewareFunction;
 };
 
