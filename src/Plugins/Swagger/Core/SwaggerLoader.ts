@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 
 import { Route } from "../../Route/Route";
-import { BaseRouteDataTransform } from "../../Route/BaseRouteDataTransform";
+import { BaseRouteDataTransform } from "../../Route/IRouteDataTransform";
 import { LocationParameter, RouteDataTransform } from "../../Route/type";
 import { DataTransform } from "../Component/DataTransform/DataTransform";
 import { MediaData } from "../Component/MediaData/MediaData";

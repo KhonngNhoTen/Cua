@@ -1,10 +1,10 @@
-import { DataTransform } from "../Swagger/Component/DataTransform/DataTransform";
-import { MediaData } from "../Swagger/Component/MediaData/MediaData";
-import { TYPES } from "../Swagger/Component/Schema/BaseSchema";
-import { FileSchema } from "../Swagger/Component/Schema/FileSchema";
-import { Schema } from "../Swagger/Component/Schema/Schema";
-import { BaseRouteDataTransform } from "./BaseRouteDataTransform";
-import { RouteDataTransform } from "./type";
+import { DataTransform } from "../Plugins/Swagger/Component/DataTransform/DataTransform";
+import { MediaData } from "../Plugins/Swagger/Component/MediaData/MediaData";
+import { TYPES } from "../Plugins/Swagger/Component/Schema/BaseSchema";
+import { FileSchema } from "../Plugins/Swagger/Component/Schema/FileSchema";
+import { Schema } from "../Plugins/Swagger/Component/Schema/Schema";
+import { IRouteDataTransform } from "./IRouteDataTransform";
+import { InputRouteDataTransform } from "./type";
 
 export const ContentStream = {
   GIF: "image/gif",
@@ -26,11 +26,11 @@ export const ContentStream = {
   WEBM: "video/webm",
 };
 
-export class StreamData extends BaseRouteDataTransform {
+export class StreamData implements IRouteDataTransform {
   private listFileName?: string;
   private singleFileName?: string;
   private description?: string;
-  private data?: RouteDataTransform;
+  private data?: InputRouteDataTransform;
   private contentType: string = ContentStream.MULTIPART_FORM;
 
   listFile(name: string) {
@@ -43,7 +43,7 @@ export class StreamData extends BaseRouteDataTransform {
     return this;
   }
 
-  fields(data: RouteDataTransform) {
+  fields(data: InputRouteDataTransform) {
     this.data = data;
     return this;
   }
