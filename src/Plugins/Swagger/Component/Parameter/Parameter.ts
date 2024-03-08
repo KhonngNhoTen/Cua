@@ -1,4 +1,3 @@
-import { RouteDataTransform } from "../../../Route/type";
 import { IRouteGenerator } from "../../Core/IRouteGenerator";
 import { Schema } from "../Schema/Schema";
 import { TYPES } from "../Schema/BaseSchema";
@@ -7,7 +6,7 @@ import { MediaData } from "../MediaData/MediaData";
 
 export class Parameter extends BaseParameter implements IRouteGenerator {
   fromRoute(
-    data: RouteDataTransform,
+    data: Object,
     location: "query" | "header" | "path" | "cookie",
     key?: string,
     required?: boolean

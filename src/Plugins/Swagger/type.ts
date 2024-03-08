@@ -5,7 +5,7 @@ export type SwaggerExportSchema = {
     url: string;
   }[];
   externalDocs?: ExternalDocs;
-  tags?: Tags[] | string[];
+  tags?: Tags[];
   paths: { [path: string]: { [httpMethod: string]: Path } };
   components?: {
     securitySchemes?: Record<string, SwaggerSecurity>;
@@ -23,6 +23,10 @@ export type Tags = {
   description: string;
   externalDocs?: ExternalDocs;
 };
+
+export function isTag(object: any): object is Tags {
+  return (object as Tags).description !== undefined && (object as Tags).name !== undefined;
+}
 
 export type ExternalDocs = {
   description?: string;

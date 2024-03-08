@@ -1,9 +1,3 @@
-import { DataTransform } from "../Plugins/Swagger/Component/DataTransform/DataTransform";
-import { MediaData } from "../Plugins/Swagger/Component/MediaData/MediaData";
-import { TYPES } from "../Plugins/Swagger/Component/Schema/BaseSchema";
-import { FileSchema } from "../Plugins/Swagger/Component/Schema/FileSchema";
-import { Schema } from "../Plugins/Swagger/Component/Schema/Schema";
-import { IRouteDataTransform } from "./IRouteDataTransform";
 import { InputRouteDataTransform } from "./type";
 
 export const ContentStream = {
@@ -26,7 +20,7 @@ export const ContentStream = {
   WEBM: "video/webm",
 };
 
-export class StreamData implements IRouteDataTransform {
+export class RouteStreamData {
   private listFileName?: string;
   private singleFileName?: string;
   private description?: string;
@@ -58,20 +52,13 @@ export class StreamData implements IRouteDataTransform {
     return this;
   }
 
-  dataTransform(): DataTransform {
-    const isArrayFile = !!this.listFileName;
-    const nameFile = this.listFileName ?? this.singleFileName;
-    let streamSchema = new FileSchema({ isArrayFile, type: TYPES.FILE });
-
-    if (this.listFileName || this.singleFileName)
-      streamSchema = new Schema().fromRoute(this.data ?? {}).addNode(streamSchema, nameFile);
-
-    return new DataTransform(
-      new MediaData({
-        schema: streamSchema,
-        contentType: this.contentType,
-        description: this.description,
-      })
-    );
+  getOptions() {
+    return {
+      listFileName: this.listFileName,
+      singleFileName: this.singleFileName,
+      description: this.description,
+      data: this.data,
+      contentType: this.contentType,
+    };
   }
 }
