@@ -1,4 +1,3 @@
-import { RouteDataTransform } from "../../../Route/type";
 import { IRouteGenerator } from "../../Core/IRouteGenerator";
 import { SwaggerSchema } from "../../type";
 import { BaseSchema, BaseSchemaOptions, TYPES } from "./BaseSchema";
@@ -10,7 +9,7 @@ export class Schema extends BaseSchema implements IRouteGenerator {
     super(options);
   }
 
-  fromRoute(request: RouteDataTransform, key?: string): BaseSchema {
+  fromRoute(request: Object, key?: string): BaseSchema {
     const type = this.getType(request);
     let schemaOpts: BaseSchema;
     switch (type) {
@@ -30,7 +29,7 @@ export class Schema extends BaseSchema implements IRouteGenerator {
     return schemaOpts;
   }
 
-  private primitiveTypeNode(request: RouteDataTransform, type: TYPES, key?: string): BaseSchema {
+  private primitiveTypeNode(request: any, type: TYPES, key?: string): BaseSchema {
     return new Schema({
       type,
       example: request,
@@ -38,14 +37,14 @@ export class Schema extends BaseSchema implements IRouteGenerator {
     });
   }
 
-  private arrayTypeNode(request: RouteDataTransform, type: TYPES, key?: string): BaseSchema {
+  private arrayTypeNode(request: any, type: TYPES, key?: string): BaseSchema {
     const schema = this.fromRoute(request[0], key);
     return new Schema({
       type,
     }).addNode(schema);
   }
 
-  private objectTypeNode(request: RouteDataTransform, type: TYPES, key?: string): BaseSchema {
+  private objectTypeNode(request: any, type: TYPES, key?: string): BaseSchema {
     const keys = Object.keys(request);
     const schema: Schema = new Schema({ type });
     for (let i = 0; i < keys.length; i++) {

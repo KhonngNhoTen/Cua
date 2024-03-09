@@ -21,3 +21,12 @@ export class Schema {
     return this;
   }
 }
+
+type decorations = {
+  type: "number" | "string" | "boolean" | "array" | "object";
+  example: any;
+  description?: string;
+  format?: string;
+  nullable?: boolean;
+  enum?: any[];
+};

@@ -1,5 +1,5 @@
 import { SwaggerHelper } from "../SwaggerHelper";
-import { SwaggerExportSchema, Path, ExternalDocs, SwaggerSecurity } from "../type";
+import { SwaggerExportSchema, Path, ExternalDocs, SwaggerSecurity, Tags, isTag } from "../type";
 export class SwaggerBuilder {
   private options: SwaggerExportSchema = { openapi: "", info: {}, servers: [], paths: {} };
   private pathFile: string = "";
@@ -55,8 +55,14 @@ export class SwaggerBuilder {
     return this;
   }
 
-  public addTag(tags: []) {
-    this.options.tags = tags;
+  public addTag(tags: Array<Tags | string>) {
+    if (!this.options.tags) this.options.tags = [];
+    for (let i = 0; i < tags.length; i++) {
+      const tag = tags[i];
+      if (isTag(tag)) this.options.tags.push(tag);
+      else this.options.tags.push({ name: tag, description: "No descriptions" });
+    }
+
     return this;
   }
 

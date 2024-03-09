@@ -1,6 +1,6 @@
 {
-  "name": "cua-tools",
-  "version": "1.0.0-beta",
+  "name": "cua-tool",
+  "version": "1.0.1-beta",
   "description": "Tool auto-gen swagger for expressJs, KoaJs,...",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -9,7 +9,8 @@
     "build": "rm -rf ./build && tsc",
     "watch": "tsc -w && npm run build",
     "watch:win": "tsc -w && npm run build:win",
-    "build:win": "rmdir /s /q  .\\build && tsc"
+    "build:win": "rmdir /s /q  .\\build && tsc",
+    "publishs": "npm run build && npm publish"
   },
   "repository": {
     "type": "git",
