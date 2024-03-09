@@ -30,15 +30,3 @@ type decorations = {
   nullable?: boolean;
   enum?: any[];
 };
-
-type validatiions = {};
-
-/**
- * ---> parse to decorations and create validations
- */
-type inputOptions = {};
-
-/**
- * parse to validation
- */
-type inputOptions_2 = {};
