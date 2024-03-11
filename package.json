@@ -32,6 +32,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@types/clone": "^2.1.4",
     "ts-node": "^10.9.2"
   }
 }

@@ -12,8 +12,8 @@ export type InputRouteSchema = {
   method?: string;
   middlewares?: Promise<void>[];
   handler?: (...params: any) => Promise<void>;
-  request?: InputRequest;
-  response?: InputResponse;
+  request?: InputRequest | RouteRequest;
+  response?: InputResponse | RouteResponse;
   parameters?: string[] | RouteParameter;
   childs?: InputRouteSchema[];
   security?: boolean | string[];
