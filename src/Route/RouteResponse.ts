@@ -8,22 +8,20 @@ type RouteResponseOptions = {
 };
 
 export class RouteResponse {
-  public data: { [httpStatus: string]: any } = {};
-  public decorators?: Record<string, Record<string, RouteDecorAttribute>>;
+  public data?: { [httpStatus: string]: any } = {};
+  public decorators?: RouteDecorAttribute;
   private defaultPrefix: string = "default";
 
-  constructor(
-    data?: Object,
-    decorators?: Record<string, Record<string, RouteDecorAttribute>> | Record<string, RouteDecorAttribute>
-  ) {
-    if (!data) return;
-    if (!this.isWrapperRepsonse(data)) {
-      this.data = { [this.defaultPrefix]: data };
-      if (decorators) this.decorators = { [this.defaultPrefix]: decorators as Record<string, RouteDecorAttribute> };
+  constructor(data?: Object, decorators?: RouteDecorAttribute | Record<string, RouteDecorAttribute>) {
+    const checkData = data ?? decorators;
+    if (!this.isWrapperRepsonse(checkData as Object)) {
+      if (data) this.data = { [this.defaultPrefix]: data };
+      if (decorators) this.decorators = decorators as RouteDecorAttribute;
       return;
     }
+
     this.data = data;
-    this.decorators = decorators as Record<string, Record<string, RouteDecorAttribute>>;
+    this.decorators = decorators as Record<string, RouteDecorAttribute>;
   }
 
   isWrapperRepsonse(response: Object) {

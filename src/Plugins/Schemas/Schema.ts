@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { parseDecorations } from "./Joi2SchemaDecoration";
-import clone from "clone"
+import clone from "clone";
 
 export type TypeSchemaDecoration = "number" | "string" | "boolean" | "array" | "object";
 export type SchemaDecorations = {
@@ -10,7 +10,7 @@ export type SchemaDecorations = {
   format?: string[];
   required?: boolean;
   enum?: any[];
-  childs?: Record<string, SchemaDecorations>;
+  decorators?: Record<string, SchemaDecorations>;
 };
 
 export class Schema {

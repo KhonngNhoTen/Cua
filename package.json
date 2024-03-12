@@ -29,10 +29,11 @@
   "devDependencies": {
     "@types/node": "^20.11.17",
     "joi": "^17.12.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "@types/clone": "^2.1.4",
-    "ts-node": "^10.9.2"
+    "glob": "^10.3.10"
   }
 }

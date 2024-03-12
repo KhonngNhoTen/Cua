@@ -18,6 +18,7 @@ export class DataTransform implements ISwaggerComponent, IRouteGenerator {
       })
     );
   }
+
   genSwagger(): SwaggerDataTransform {
     return {
       description: this.mediaData.description,

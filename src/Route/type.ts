@@ -56,12 +56,14 @@ export type InputParameters =
 
 //#region DEFINE TYPE FOR ATTRIBUTE OF ROUTE CLASS
 export type RouteDecorAttribute = {
-  type: string;
-  example: any;
-  description: string;
+  type?: "number" | "string" | "boolean" | "array" | "object";
+  example?: any;
+  description?: string;
   format?: string;
-  nullable?: boolean;
+  required?: boolean;
+  enum?: any[];
   decorators?: Record<string, RouteDecorAttribute>;
+  name?: string;
 };
 export type RouteAttributeData = {
   type: string;

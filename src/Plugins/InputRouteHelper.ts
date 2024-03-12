@@ -15,9 +15,10 @@ export class InputRouteHelper implements IRoutePlugin {
   convertInput(input: InputRouteSchema, out: RouteSchema, parentSchema?: InputRouteSchema) {
     const resultPath = this.convertParameter(input, parentSchema);
     out = { ...out, ...resultPath };
-    if (input.request && !(input.request instanceof RouteRequest) && !(input.request instanceof RouteStreamData))
+
+    if (input.request && !(out.request instanceof RouteRequest) && !(input.request instanceof RouteStreamData))
       out.request = new RouteRequest(input.request);
-    if (input.response && !(input.response instanceof RouteResponse) && !(input.response instanceof RouteStreamData))
+    if (input.response && !(out.response instanceof RouteResponse) && !(input.response instanceof RouteStreamData))
       out.response = new RouteResponse(input.response);
 
     if (input.request instanceof RouteStreamData) out.request = input.request;

@@ -19,13 +19,13 @@ export function parseDecorations(description?: any): SchemaDecorations | undefin
   if (description.type === "object") {
     Object.keys(description.keys).forEach((e) => {
       const deco = parseDecorations(description.keys[e]);
-      if (!decoration.childs) decoration.childs = {};
-      if (deco) decoration.childs[e] = deco;
+      if (!decoration.decorators) decoration.decorators = {};
+      if (deco) decoration.decorators[e] = deco;
     });
   } else if (description.type === "array") {
     const deco = parseDecorations(description.items[0]);
-    if (!decoration.childs) decoration.childs = {};
-    if (deco) decoration.childs.item = deco;
+    if (!decoration.decorators) decoration.decorators = {};
+    if (deco) decoration.decorators.item = deco;
   }
 
   decoration.enum = getEnum(description);

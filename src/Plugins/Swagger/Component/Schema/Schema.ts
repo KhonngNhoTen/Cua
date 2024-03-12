@@ -1,5 +1,4 @@
 import { IRouteGenerator } from "../../Core/IRouteGenerator";
-import { SwaggerSchema } from "../../type";
 import { BaseSchema, BaseSchemaOptions, TYPES } from "./BaseSchema";
 
 export type SchemaOptions = {} & BaseSchemaOptions;

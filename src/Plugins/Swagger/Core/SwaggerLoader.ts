@@ -1,16 +1,17 @@
 import fs from "fs/promises";
 
 import { Route } from "../../../Route/Route";
-import { LocationParameter } from "../../../Route/type";
+import { LocationParameter, RouteDecorAttribute } from "../../../Route/type";
 import { DataTransform } from "../Component/DataTransform/DataTransform";
 import { MediaData } from "../Component/MediaData/MediaData";
 import { Parameter } from "../Component/Parameter/Parameter";
 
 import { Path, SwaggerParameter, SwaggerDataTransform, SwaggerResponses } from "../type";
 import { SwaggerBuilder } from "./SwaggerBuilder";
-import { BaseSchema, TYPES } from "../Component/Schema/BaseSchema";
+import { BaseSchema, String2Type, TYPES } from "../Component/Schema/BaseSchema";
 import { IRoutePlugin, RoutePlugin } from "../../../Route/RoutePlugin";
 import { RouteStreamData } from "../../../Route/RouteStreamData";
+import { Schema } from "../Component/Schema/Schema";
 
 export class SwaggerLoader implements IRoutePlugin {
   createPlugin(): RoutePlugin {
@@ -57,9 +58,9 @@ export class SwaggerLoader implements IRoutePlugin {
       return new DataTransform(new MediaData().createByFile(request as RouteStreamData)).genSwagger();
 
     if (request.decorators) {
-    }
-
-    return new DataTransform(new MediaData().fromRoute(request.data)).genSwagger();
+      const schema = this.schemaByDecoration(request.decorators);
+      return new DataTransform(new MediaData({ schema })).genSwagger();
+    } else return new DataTransform(new MediaData().fromRoute(request.data)).genSwagger();
   }
 
   private createResponse(route: Route): SwaggerResponses | null {
@@ -69,9 +70,12 @@ export class SwaggerLoader implements IRoutePlugin {
 
     if (response instanceof RouteStreamData)
       resOpts.default = new DataTransform(new MediaData().createByFile(response)).genSwagger();
-    else {
+    else if (response.decorators) {
+      const schema = this.schemaByDecoration(response.decorators);
+      resOpts.default = new DataTransform(new MediaData({ schema })).genSwagger();
+    } else {
+      if (!response.data) return null;
       const prefixs = Object.keys(response.data);
-
       for (let i = 0; i < prefixs.length; i++) {
         const prefix = prefixs[i];
         resOpts[prefix] = new DataTransform(new MediaData().fromRoute(response.data[prefix])).genSwagger();
@@ -103,6 +107,34 @@ export class SwaggerLoader implements IRoutePlugin {
 
     return (security as string[]).map((e) => {
       return { e: [] };
+    });
+  }
+
+  schemaByDecoration(decorators: RouteDecorAttribute): BaseSchema {
+    console.log(decorators.type);
+    if (decorators.type === "object") {
+      const objectSchema = new Schema({ type: String2Type[decorators.type] });
+
+      Object.keys(decorators.decorators ?? {}).forEach((e) => {
+        if (!decorators.decorators) return;
+        const schema = this.schemaByDecoration(decorators.decorators[e]);
+        objectSchema.addNode(schema, e);
+      });
+
+      return objectSchema;
+    } else if (decorators.type === "array") {
+      const arrSchema = new Schema({ type: String2Type[decorators.type] });
+      if (decorators.decorators) arrSchema.addNode(this.schemaByDecoration(decorators.decorators.item));
+      return arrSchema;
+    }
+
+    return new Schema({
+      description: decorators.description,
+      type: String2Type[decorators.type ?? "string"],
+      enum: decorators.enum,
+      nullable: decorators.required,
+      example: decorators.example,
+      format: decorators.format,
     });
   }
 }

@@ -2,7 +2,7 @@ import { ISwaggerComponent } from "../../Core/ISwaggerComponent";
 import { SwaggerSchema } from "../../type";
 
 export type BaseSchemaOptions = {
-  type: TYPES;
+  type?: TYPES;
   nullable?: boolean;
   example?: any;
   description?: string;
@@ -20,6 +20,14 @@ export enum TYPES {
   FILE,
   BOOLEAN,
 }
+
+export const String2Type = {
+  string: TYPES.STRING,
+  array: TYPES.ARRAY,
+  boolean: TYPES.BOOLEAN,
+  number: TYPES.NUMBER,
+  object: TYPES.OBJECT,
+};
 export class BaseSchema implements ISwaggerComponent {
   public type?: TYPES;
   public nodes: Record<string, BaseSchema> = {};
@@ -85,6 +93,6 @@ export class BaseSchema implements ISwaggerComponent {
 
     if (typeof value === "object") return TYPES.OBJECT;
 
-    throw new Error("Type not support");
+    throw new Error(`Type [${type}] not support - Value ${value}`);
   }
 }
