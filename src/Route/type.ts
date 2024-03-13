@@ -46,24 +46,26 @@ export type LocationParameter = "query" | "header" | "path" | "cookie";
 export type InputParameters =
   | string[]
   | {
-      path?: Record<string, InputRouteDataTransform>;
-      query?: Record<string, InputRouteDataTransform>;
-      header?: Record<string, InputRouteDataTransform>;
-      cookie?: Record<string, InputRouteDataTransform>;
-    };
+    path?: Record<string, InputRouteDataTransform>;
+    query?: Record<string, InputRouteDataTransform>;
+    header?: Record<string, InputRouteDataTransform>;
+    cookie?: Record<string, InputRouteDataTransform>;
+  };
 
 //#endregion
 
 //#region DEFINE TYPE FOR ATTRIBUTE OF ROUTE CLASS
 export type RouteDecorAttribute = {
   type?: "number" | "string" | "boolean" | "array" | "object";
+  name?: string;
   example?: any;
   description?: string;
-  format?: string;
+  format?: string[];
   required?: boolean;
   enum?: any[];
-  decorators?: Record<string, RouteDecorAttribute>;
-  name?: string;
+  otherProperties?: Record<string, any>; 
+
+  decorators?: RouteDecorAttribute[];
 };
 export type RouteAttributeData = {
   type: string;
