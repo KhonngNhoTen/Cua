@@ -8,8 +8,8 @@ export type DataType = "string" | "number" | "boolean" | "object" | "array";
 export type InputSchema = {
   type: DataType | [DataType, string | string[]];
   description?: string;
-  properties?: Record<string, InputSchema>;
-  item?: InputSchema;
+  properties?: Record<string, InputSchema | DataType>;
+  item?: InputSchema | DataType;
   required?: InputBooleanRule;
 
   isEmail?: InputBooleanRule;
@@ -37,6 +37,7 @@ export function isDataType(object: any): object is DataType {
 }
 
 export function isInputSchema(object: any): object is InputSchema {
+  if (isDataType(object)) return true;
   let type = (object as InputSchema).type;
   if (!type) return false;
 

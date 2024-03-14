@@ -1,7 +1,7 @@
 import { getType } from "../../Helpers/getType";
 import { RouteDecorAttribute } from "../../Route/type";
 import { getRuleValue } from "./SchemaHelper";
-import { InputSchema } from "./type";
+import { DataType, InputSchema, isDataType } from "./type";
 
 export function compile(data: any): InputSchema {
   const type = getType(data);
@@ -31,7 +31,10 @@ const parseOtherProperties = {
   range: (data: any) => ({ range: { maximun: data.lt ?? data.lte, minium: data.gt ?? data.gte } }),
 } as Record<string, any>;
 
-export function parseRouteDecorations(input: InputSchema, name?: string): RouteDecorAttribute {
+export function parseRouteDecorations(input: InputSchema | DataType, name?: string): RouteDecorAttribute {
+  if (isDataType(input)) {
+    input = { type: input };
+  }
   const decorator: RouteDecorAttribute = {
     type: getRuleValue(input.type),
     description: input.description,
@@ -40,11 +43,16 @@ export function parseRouteDecorations(input: InputSchema, name?: string): RouteD
     name,
     otherProperties: {},
   };
+
+  // Create decorator for object type
   if (input.type === "object" && input.properties) {
     decorator.decorators = [];
     for (const [key, value] of Object.entries(input.properties))
       decorator.decorators.push(parseRouteDecorations(value, key));
-  } else if ((input.type === "array", input.item)) decorator.decorators = [parseRouteDecorations(input.item)];
+  }
+  // Create decorator for array type
+  else if ((input.type === "array", input.item)) decorator.decorators = [parseRouteDecorations(input.item)];
+  // Create decorator for other type
   else {
     Object.keys(input).forEach((key: string) => {
       if (parseFormat[key]) decorator.format = parseFormat[key];
