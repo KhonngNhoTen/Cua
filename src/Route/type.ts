@@ -1,6 +1,5 @@
 import { Route } from "./Route";
-import { RouteRequest } from "./RouteRequest";
-import { RouteResponse } from "./RouteResponse";
+import { RouteData } from "./RouteData";
 import { RouteStreamData } from "./RouteStreamData";
 
 //#region DEFINE TYPE FOR INPUT CONTRUCTOR OF ROUTE
@@ -12,8 +11,8 @@ export type InputRouteSchema = {
   method?: string;
   middlewares?: Promise<void>[];
   handler?: (...params: any) => Promise<void>;
-  request?: InputRequest | RouteRequest;
-  response?: InputResponse | RouteResponse;
+  request?: InputRequest | RouteData;
+  response?: InputResponse | RouteData;
   parameters?: string[] | RouteParameter;
   childs?: InputRouteSchema[];
   security?: boolean | string[];
@@ -27,8 +26,8 @@ export type RouteSchema = {
   method?: string;
   middlewares?: Promise<void>[];
   handler?: (...params: any) => Promise<void>;
-  request?: RouteRequest | RouteStreamData;
-  response?: RouteResponse | RouteStreamData;
+  request?: RouteData | RouteStreamData;
+  response?: RouteData | RouteStreamData;
   parameters?: RouteParameter;
   childs?: Route[];
   security?: boolean | string[];
@@ -46,11 +45,11 @@ export type LocationParameter = "query" | "header" | "path" | "cookie";
 export type InputParameters =
   | string[]
   | {
-    path?: Record<string, InputRouteDataTransform>;
-    query?: Record<string, InputRouteDataTransform>;
-    header?: Record<string, InputRouteDataTransform>;
-    cookie?: Record<string, InputRouteDataTransform>;
-  };
+      path?: Record<string, InputRouteDataTransform>;
+      query?: Record<string, InputRouteDataTransform>;
+      header?: Record<string, InputRouteDataTransform>;
+      cookie?: Record<string, InputRouteDataTransform>;
+    };
 
 //#endregion
 
@@ -60,11 +59,10 @@ export type RouteDecorAttribute = {
   name?: string;
   example?: any;
   description?: string;
-  format?: string[];
+  format?: string;
   required?: boolean;
   enum?: any[];
-  otherProperties?: Record<string, any>; 
-
+  otherProperties?: any;
   decorators?: RouteDecorAttribute[];
 };
 export type RouteAttributeData = {

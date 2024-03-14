@@ -1,6 +1,5 @@
+import { RouteData } from "../Route/RouteData";
 import { IRoutePlugin, RoutePlugin } from "../Route/RoutePlugin";
-import { RouteRequest } from "../Route/RouteRequest";
-import { RouteResponse } from "../Route/RouteResponse";
 import { RouteStreamData } from "../Route/RouteStreamData";
 import { InputRouteSchema, RouteSchema } from "../Route/type";
 
@@ -16,10 +15,10 @@ export class InputRouteHelper implements IRoutePlugin {
     const resultPath = this.convertParameter(input, parentSchema);
     out = { ...out, ...resultPath };
 
-    if (input.request && !(out.request instanceof RouteRequest) && !(input.request instanceof RouteStreamData))
-      out.request = new RouteRequest(input.request);
-    if (input.response && !(out.response instanceof RouteResponse) && !(input.response instanceof RouteStreamData))
-      out.response = new RouteResponse(input.response);
+    if (input.request && !(out.request instanceof RouteData) && !(input.request instanceof RouteStreamData))
+      out.request = new RouteData(input.request);
+    if (input.response && !(out.response instanceof RouteData) && !(input.response instanceof RouteStreamData))
+      out.response = new RouteData(input.response);
 
     if (input.request instanceof RouteStreamData) out.request = input.request;
     if (input.response instanceof RouteStreamData) out.response = input.response;

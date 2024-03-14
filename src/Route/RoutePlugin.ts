@@ -9,7 +9,7 @@ export type BeforeCreateRoute = (
   wrapperSchema?: InputRouteSchema
 ) => RouteSchema;
 export type AfterCreateRoute = (routes: Route[]) => Promise<any>;
-export type RegisterMiddleware = (route: Route) => Promise<MiddlewareFunction>;
+export type RegisterMiddleware = (route: Route) => Promise<MiddlewareFunction | null>;
 
 /**
  * LIST OF HOOOK:

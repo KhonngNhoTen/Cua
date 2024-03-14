@@ -1,5 +1,4 @@
-import { RouteRequest } from "./RouteRequest";
-import { RouteResponse } from "./RouteResponse";
+import { RouteData } from "./RouteData";
 import { RouteStreamData } from "./RouteStreamData";
 import { InputRouteSchema, RouteParameter, RouteSchema } from "./type";
 
@@ -13,8 +12,8 @@ export class Route {
   tags?: string[];
   middlewares: Promise<void>[] = [];
   handler?: (...params: any) => Promise<void>;
-  request?: RouteRequest | RouteStreamData;
-  response?: RouteResponse | RouteStreamData;
+  request?: RouteData | RouteStreamData;
+  response?: RouteData | RouteStreamData;
   parameters?: RouteParameter;
   childs?: Route[];
   security?: string[] | boolean;

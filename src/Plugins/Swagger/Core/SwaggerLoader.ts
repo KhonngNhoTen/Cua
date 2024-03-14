@@ -115,16 +115,14 @@ export class SwaggerLoader implements IRoutePlugin {
     if (decorators.type === "object") {
       const objectSchema = new Schema({ type: String2Type[decorators.type] });
 
-      Object.keys(decorators.decorators ?? {}).forEach((e) => {
-        if (!decorators.decorators) return;
-        const schema = this.schemaByDecoration(decorators.decorators[e]);
-        objectSchema.addNode(schema, e);
-      });
-
+      for (let i = 0; decorators.decorators && i < decorators.decorators.length; i++) {
+        const decor = decorators.decorators[i];
+        objectSchema.addNode(this.schemaByDecoration(decor), decor.name);
+      }
       return objectSchema;
     } else if (decorators.type === "array") {
       const arrSchema = new Schema({ type: String2Type[decorators.type] });
-      if (decorators.decorators) arrSchema.addNode(this.schemaByDecoration(decorators.decorators.item));
+      if (decorators.decorators) arrSchema.addNode(this.schemaByDecoration(decorators.decorators[0]));
       return arrSchema;
     }
 
@@ -134,7 +132,7 @@ export class SwaggerLoader implements IRoutePlugin {
       enum: decorators.enum,
       nullable: decorators.required,
       example: decorators.example,
-      format: decorators.format,
+      format: decorators?.format ?? undefined,
     });
   }
 }

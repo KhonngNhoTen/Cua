@@ -1,16 +1,17 @@
-import clone from "clone";
-import { InputSchema, SchemaDecorations, isInputSchema } from "./type";
-import { compile, parseDecorations } from "./SchemaParser";
+declare function require(name: string): any;
+
+const clone = require("clone") as Function;
+
+import { InputSchema, isInputSchema } from "./type";
+import { compile } from "./SchemaParser";
 
 export class Schema {
-  validations?: InputSchema;
-  decorations?: SchemaDecorations;
+  validations: InputSchema;
   examples?: Record<string, any>;
 
-  constructor(schema?: Object | InputSchema, examples?: Object) {
+  constructor(schema: Record<string, any> | InputSchema, examples?: Object) {
     if (isInputSchema(schema)) this.validations = schema;
     else this.validations = compile(schema);
-    this.decorations = parseDecorations(this.validations)
   }
 
   optional(fields: string[] | string) {
@@ -34,6 +35,6 @@ export class Schema {
   }
 
   clone() {
-    return clone<Schema>(this);
+    return clone(this) as Schema;
   }
 }

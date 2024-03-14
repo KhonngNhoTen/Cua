@@ -43,7 +43,7 @@ export class BaseSchema implements ISwaggerComponent {
     this.type = options?.type ?? TYPES.OBJECT;
     this.nullable = options?.nullable ?? false;
     this.description = options?.description ?? "";
-    this.format = options?.format ?? "";
+    this.format = options?.format;
     this.enum = options?.enum;
     this.example = options?.example;
     this.name = options?.name ?? "";
