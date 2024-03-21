@@ -111,7 +111,6 @@ export class SwaggerLoader implements IRoutePlugin {
   }
 
   schemaByDecoration(decorators: RouteDecorAttribute): BaseSchema {
-    console.log(decorators.type);
     if (decorators.type === "object") {
       const objectSchema = new Schema({ type: String2Type[decorators.type] });
 
