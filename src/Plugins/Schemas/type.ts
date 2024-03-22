@@ -1,66 +1,62 @@
+import validator from "validator";
 import { isObject } from "../../Helpers/getType";
 import { Schema } from "./Schema";
+import { CustomMessage } from "./Validator/CustomMessage";
 
-type InputBooleanRule = boolean | [boolean, string | string[]];
-type InputNumberRule = number | [number, string | string[]];
-
+export type BaseRuleOptions = { message?: CustomMessage };
 export type DataType = "string" | "number" | "boolean" | "object" | "array";
+
+export type IsEmailRuleOptions = BaseRuleOptions & { emailOption?: validator.IsEmailOptions };
+export type IsUrlRuleOptions = BaseRuleOptions & { urlOptions?: validator.IsURLOptions };
+export type RequiredRuleOptions = BaseRuleOptions;
+export type TypeRuleOptions = BaseRuleOptions & { type: DataType };
+
 export type InputSchema = {
-  type: DataType | [DataType, string | string[]];
+  type: TypeRuleOptions | DataType;
   description?: string;
   properties?: Record<string, InputSchema | DataType>;
   item?: InputSchema | DataType;
-  required?: InputBooleanRule;
+  required?: RequiredRuleOptions | boolean;
 
-  isEmail?: InputBooleanRule;
-  isAscii?: InputBooleanRule;
-  isAlpha?: InputBooleanRule;
-  isAlphanumeric?: InputBooleanRule;
-  isEmpty?: InputBooleanRule;
-  isUrl?: InputBooleanRule;
-  isRgbColor?: InputBooleanRule;
-  isMD5?: InputBooleanRule;
+  isEmail?: IsEmailRuleOptions | boolean;
+  isAscii?: boolean | BaseRuleOptions;
+  isAlpha?: boolean | BaseRuleOptions;
+  isAlphanumeric?: boolean | BaseRuleOptions;
+  isEmpty?: boolean | BaseRuleOptions;
+  isUrl?: IsUrlRuleOptions | boolean;
+  isRgbColor?: boolean | BaseRuleOptions;
+  isMD5?: boolean | BaseRuleOptions;
 
   stringDate?: string | [string, string | string[]];
 
-  length?: InputNumberRule;
+  length?: number;
   range?: { gte?: any; gt?: any; lte?: any; lt?: any; message: string | string[] };
 
   enum?: any[];
   actions?: [(data: any) => any];
 };
 
-// export type InputSchema = InputAttributeSchema | DataType;
+export type SchemaOptions = {
+  type: TypeRuleOptions;
+  description?: string;
+  properties?: Record<string, SchemaOptions>;
+  item?: SchemaOptions;
+  required?: RequiredRuleOptions;
 
-export function isDataType(object: any): object is DataType {
-  return typeof object === "string" && ["string", "number", "date", "boolean", "object", "array"].includes(object);
-}
+  isEmail?: IsEmailRuleOptions;
+  isAscii?: BaseRuleOptions;
+  isAlpha?: BaseRuleOptions;
+  isAlphanumeric?: BaseRuleOptions;
+  isEmpty?: BaseRuleOptions;
+  isUrl?: IsUrlRuleOptions;
+  isRgbColor?: BaseRuleOptions;
+  isMD5?: BaseRuleOptions;
 
-export function isInputSchema(object: any): object is InputSchema {
-  if (isDataType(object)) return true;
-  let type = (object as InputSchema).type;
-  if (!type) return false;
+  stringDate?: string;
 
-  type = Array.isArray(type) ? type[0] : type;
-  return ["string", "number", "date", "boolean", "object", "array"].includes(type);
-}
+  length?: number;
+  range?: { gte?: any; gt?: any; lte?: any; lt?: any; message: string | string[] };
 
-// export function isInputSchema(object: any): object is InputSchema {
-//   return isDataType(object) || isInputAttributeSchema(object);
-// }
-
-export function isMapInputSchema(object: any): object is Record<string, InputSchema> {
-  if (!isObject(object)) return false;
-  for (const [key, value] of Object.entries(object)) {
-    if (!isInputSchema(value)) return false;
-  }
-  return true;
-}
-
-export function isMapSchema(object: any): object is Record<string, InputSchema> {
-  if (!isObject(object)) return false;
-  for (const [key, value] of Object.entries(object)) {
-    if (!(value instanceof Schema)) return false;
-  }
-  return true;
-}
+  enum?: any[];
+  actions?: [(data: any) => any];
+};
