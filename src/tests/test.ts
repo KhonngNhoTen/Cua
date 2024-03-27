@@ -1,16 +1,35 @@
 import { Schema } from "../Plugins/Schemas/Schema";
+import { validate, validateAsync } from "../Plugins/Schemas/Validator";
+
 let schema = new Schema({
   type: "object",
   properties: {
-    name: {
-      type: "string",
-      description: "Ho va ten",
+    name: "number",
+    age: "number",
+    childs: {
+      type: "array",
+      item: "number",
     },
-    age: {
-      type: "number",
-      description: "Tuoi",
+    prop: {
+      type: "object",
+      properties: {
+        test: "number",
+        test2: "string",
+      },
     },
   },
 });
-console.log(schema.validations);
-console.log(new Schema({ pet: { id: 0, name: "name" }, count: 0 }).validations);
+
+console.time("test....");
+const rs = validate({ name: 0 }, schema, { abortEarly: false });
+console.log(rs);
+console.timeEnd("test....");
+
+async function main() {
+  console.time("test....2");
+  const rs2 = await validateAsync({ name: "Linh" }, schema, { abortEarly: false });
+  console.log(rs2);
+  console.timeEnd("test....2");
+}
+
+main();

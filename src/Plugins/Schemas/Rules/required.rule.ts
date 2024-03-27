@@ -1,10 +1,10 @@
 import { RequiredRuleOptions } from "../type";
-import { ResultValidateAttribute } from "../Validator/Validator";
+import { ResultCheckRule } from "../Validator/type";
 
-export function required(value: any, options: RequiredRuleOptions): ResultValidateAttribute {
+export function required(value: any, options: RequiredRuleOptions): ResultCheckRule {
   const DEFAULT_MESSAGE = "is required";
-  if (!value && options) return { message: DEFAULT_MESSAGE, valid: false };
-  if (!value && !options) return { forceSkip: true, valid: true };
+  if (value === undefined && options !== undefined) return { message: DEFAULT_MESSAGE, valid: false };
+  if (value === undefined && options === undefined) return { forceSkip: true, valid: true };
   return {
     valid: true,
   };

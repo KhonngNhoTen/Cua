@@ -18,7 +18,7 @@ export class Schema {
   private defaultAttributeRule(input: InputSchema): SchemaOptions {
     const type: TypeRuleOptions = isDataType(input.type) ? { type: input.type } : input.type;
     let requried: RequiredRuleOptions | undefined = undefined;
-    if (input.required === true) requried = {};
+    if (input.required === true || input.required === undefined) requried = {};
     else if (input.required) requried = input.required;
 
     input.type = type;

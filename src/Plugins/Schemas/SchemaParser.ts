@@ -1,17 +1,29 @@
 import { getType } from "../../Helpers/getType";
 import { RouteDecorAttribute } from "../../Route/type";
-import { SchemaOptions } from "./type";
+import { DataType, SchemaOptions } from "./type";
+
+function defautlSchema(type: DataType) {
+  return {
+    type: { type },
+    required: {
+      message: undefined,
+    },
+  };
+}
 
 export function compile(data: any): SchemaOptions {
   const type = getType(data);
   if (type === "object") {
-    const schema: SchemaOptions = { type: { type: "object" }, properties: {} };
+    const schema: SchemaOptions = { ...defautlSchema(type), properties: {} };
     for (const [key, value] of Object.entries(data)) if (schema.properties) schema.properties[key] = compile(value);
     return schema;
   } else if (type === "array") {
-    return { type: { type: "array" }, item: compile(data[0]) };
+    return {
+      ...defautlSchema(type),
+      item: compile(data[0]),
+    };
   }
-  return { type: { type } };
+  return { ...defautlSchema(type) };
 }
 
 const parseFormat = {

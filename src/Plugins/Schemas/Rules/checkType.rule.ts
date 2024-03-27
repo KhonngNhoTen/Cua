@@ -1,8 +1,8 @@
 import { getType } from "../../../Helpers/getType";
 import { TypeRuleOptions } from "../type";
-import { ResultValidateAttribute } from "../Validator/Validator";
+import { ResultCheckRule } from "../Validator/type";
 
-export function checkType(value: any, options: TypeRuleOptions): ResultValidateAttribute {
+export function checkType(value: any, options: TypeRuleOptions): ResultCheckRule {
   const DEFAULT_MESSAGE = "should be " + options.type;
   const type = getType(value);
   if (type !== options.type) return { valid: false, message: DEFAULT_MESSAGE };

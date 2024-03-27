@@ -1,7 +1,4 @@
-import validator from "validator";
-import { isObject } from "../../Helpers/getType";
-import { Schema } from "./Schema";
-import { CustomMessage } from "./Validator/CustomMessage";
+import { CustomMessage } from "./Validator/type";
 
 export type BaseRuleOptions = { message?: CustomMessage };
 export type DataType = "string" | "number" | "boolean" | "object" | "array";
@@ -41,7 +38,7 @@ export type SchemaOptions = {
   description?: string;
   properties?: Record<string, SchemaOptions>;
   item?: SchemaOptions;
-  required?: RequiredRuleOptions;
+  required: RequiredRuleOptions;
 
   isEmail?: IsEmailRuleOptions;
   isAscii?: BaseRuleOptions;
